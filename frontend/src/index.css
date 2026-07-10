@@ -213,4 +213,39 @@
     font-weight: 400;
     line-height: 1.15;
   }
+
+  /* Interactive Elevating Card Style */
+  .echo-card-interactive {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+
+  .echo-card-interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03), 0 2px 8px rgba(0, 0, 0, 0.01);
+    border-color: rgba(37, 211, 102, 0.15);
+  }
+
+  .dark .echo-card-interactive:hover {
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+    border-color: rgba(37, 211, 102, 0.25);
+  }
+
+  /* Page Entry & Message Pop Keyframes & Classes */
+  @keyframes fadeInPage {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes popInMessage {
+    from { opacity: 0; transform: scale(0.97) translateY(4px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .animate-page-entry {
+    animation: fadeInPage 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-message {
+    animation: popInMessage 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
 }

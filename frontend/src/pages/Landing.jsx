@@ -9,7 +9,7 @@ const steps = [
 
 export default function Landing() {
   return (
-    <div className="pb-24">
+    <div className="pb-24 animate-page-entry">
       {/* Hero Section */}
       <section className="max-w-4xl mx-auto px-6 pt-24 pb-16 text-center">
         <p className="font-heading text-xs font-semibold uppercase tracking-[0.25em] text-[var(--primary-text)] mb-6 drop-shadow-sm">
@@ -45,7 +45,7 @@ export default function Landing() {
           </h2>
           <div className="grid md:grid-cols-4 gap-8">
             {steps.map((p) => (
-              <div key={p.step} className="echo-card p-8 bg-[var(--surface)] flex flex-col justify-between min-h-[220px] hover:translate-y-[-4px] transition-all duration-300">
+              <div key={p.step} className="echo-card echo-card-interactive p-8 bg-[var(--surface)] flex flex-col justify-between min-h-[220px]">
                 <div>
                   <div className="font-heading text-xs font-bold text-[var(--primary-text)] mb-4 uppercase tracking-wider">
                     {p.num}

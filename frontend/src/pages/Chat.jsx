@@ -36,7 +36,7 @@ function TypingDots() {
 function MessageBubble({ msg, isOwn }) {
   return (
     <div className={`flex w-full ${isOwn ? 'justify-end' : 'justify-start'} mb-4`}>
-      <div className={`max-w-[70%] px-4.5 py-3 rounded-2xl text-[13.5px] leading-relaxed shadow-sm font-sans ${
+      <div className={`max-w-[70%] px-4.5 py-3 rounded-2xl text-[13.5px] leading-relaxed shadow-sm font-sans animate-message ${
         isOwn 
           ? 'bg-[var(--primary)] text-[var(--primary-fg)] font-medium rounded-tr-none shadow-[0_4px_12px_rgba(37,211,102,0.12)]' 
           : 'bg-[var(--card-bg)] text-[var(--foreground)] border border-[var(--card-border)] rounded-tl-none'
@@ -98,7 +98,7 @@ export default function Chat() {
   };
 
   return (
-    <div className="flex h-[calc(100vh-64px)] max-w-6xl mx-auto w-full p-6 gap-6">
+    <div className="flex h-[calc(100vh-64px)] max-w-6xl mx-auto w-full p-6 gap-6 animate-page-entry">
       {/* ── Sidebar ── */}
       <div className="w-80 shrink-0 flex flex-col gap-4 overflow-y-auto pr-1">
         <PersonalityCard profile={styleProfile} targetSender={targetSender} />
