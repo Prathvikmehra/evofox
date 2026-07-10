@@ -1,4 +1,7 @@
 import { Link } from "react-router-dom";
+import { Suspense, lazy } from "react";
+
+const Spline = lazy(() => import("@splinetool/react-spline"));
 
 const steps = [
   { num: "01", step: "Preserve", detail: "Export your chat history, privately and without signup walls." },
@@ -7,33 +10,62 @@ const steps = [
   { num: "04", step: "Talk & Grow", detail: "Interact with a grounded, authentic version of yourself." },
 ];
 
+function SplineLoader() {
+  return (
+    <div className="w-full h-full min-h-[340px] rounded-3xl bg-[var(--background-subtle)] animate-pulse"
+      style={{ background: "linear-gradient(120deg, var(--background-subtle) 40%, var(--card-bg) 60%, var(--background-subtle) 80%)", backgroundSize: "200% 100%", animation: "shimmer 1.8s infinite" }}>
+      <style>{`@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }`}</style>
+    </div>
+  );
+}
+
 export default function Landing() {
   return (
     <div className="pb-24 animate-page-entry">
-      {/* Hero Section */}
-      <section className="max-w-4xl mx-auto px-6 pt-24 pb-16 text-center">
-        <p className="font-heading text-xs font-semibold uppercase tracking-[0.25em] text-[var(--primary-text)] mb-6 drop-shadow-sm">
-          A space for your memories and growth
-        </p>
-        <h1 className="echo-title text-5xl md:text-7xl text-[var(--foreground)] tracking-tight mb-8">
-          Your second mind.
-        </h1>
-        <p className="max-w-2xl mx-auto text-[var(--foreground-muted)] text-base md:text-lg leading-relaxed font-sans">
-          Today's AI is built to know everything about the world. EchoMind is built to understand you —
-          learning your unique way of speaking, your experiences, and your thoughts from your chat exports, 
-          so you can revisit, reflect, and talk to your past self.
-        </p>
-        <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-6">
-          <Link
-            to="/upload"
-            className="echo-btn-primary px-8 py-4 text-sm font-semibold inline-block"
-          >
-            Create your clone
-          </Link>
-          <span className="font-heading text-xs text-[var(--foreground-muted)] flex items-center gap-2 px-4 py-2.5 rounded-[20px] bg-[var(--card-bg)] border border-[var(--card-border)] shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-[var(--primary)] animate-pulse shadow-[0_0_6px_var(--primary)]" />
-            .txt export in, live clone out
-          </span>
+      {/* Hero Section — two-column on md+ */}
+      <section className="max-w-7xl mx-auto px-6 pt-16 pb-12">
+        <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+
+          {/* ── Left: Text + CTA ── */}
+          <div className="flex-1 text-center md:text-left">
+            <p className="font-heading text-xs font-semibold uppercase tracking-[0.25em] text-[var(--primary-text)] mb-6 drop-shadow-sm">
+              A space for your memories and growth
+            </p>
+            <h1 className="echo-title text-5xl md:text-6xl lg:text-7xl text-[var(--foreground)] tracking-tight mb-8 leading-[1.1]">
+              Your second<br />mind.
+            </h1>
+            <p className="max-w-xl text-[var(--foreground-muted)] text-base md:text-lg leading-relaxed font-sans mb-12">
+              Today's AI is built to know everything about the world. EchoMind is built to understand <em>you</em> —
+              learning your unique way of speaking, your experiences, and your thoughts from your chat exports,
+              so you can revisit, reflect, and talk to your past self.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center md:items-start justify-center md:justify-start gap-6">
+              <Link
+                to="/upload"
+                className="echo-btn-primary px-8 py-4 text-sm font-semibold inline-block"
+              >
+                Create your clone
+              </Link>
+              <span className="font-heading text-xs text-[var(--foreground-muted)] flex items-center gap-2 px-4 py-2.5 rounded-[20px] bg-[var(--card-bg)] border border-[var(--card-border)] shadow-sm">
+                <span className="w-2 h-2 rounded-full bg-[var(--primary)] animate-pulse shadow-[0_0_6px_var(--primary)]" />
+                .txt export in, live clone out
+              </span>
+            </div>
+          </div>
+
+          {/* ── Right: Spline 3D Scene ── */}
+          <div className="flex-1 w-full relative" style={{ minHeight: "420px" }}>
+            {/* Soft glow behind the scene */}
+            <div className="absolute inset-0 rounded-3xl pointer-events-none"
+              style={{ background: "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(37,211,102,0.08) 0%, transparent 70%)" }} />
+            <Suspense fallback={<SplineLoader />}>
+              <Spline
+                scene="https://prod.spline.design/94l2XcO1QN64HL7q/scene.splinecode"
+                style={{ width: "100%", height: "420px", borderRadius: "24px" }}
+              />
+            </Suspense>
+          </div>
+
         </div>
       </section>
 
