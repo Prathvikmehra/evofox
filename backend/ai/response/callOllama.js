@@ -15,7 +15,7 @@
  * @returns {Promise<string>}
  */
 
-const config = require("../src/config");
+const config = require("../../src/config");
 
 const TIMEOUT_MS = 20_000; // 20 seconds
 
