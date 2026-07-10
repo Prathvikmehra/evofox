@@ -4,7 +4,7 @@ export default function MessageBubble({ message, isOwn, isTyping = false }) {
   return (
     <div className={`flex w-full ${isOwn ? 'justify-end' : 'justify-start'} mb-3`}>
       <div 
-        className={`max-w-[70%] px-4.5 py-3 rounded-2xl text-[13.5px] leading-relaxed shadow-sm font-sans ${
+        className={`max-w-[70%] px-4.5 py-3 rounded-2xl text-[13.5px] leading-relaxed shadow-sm font-sans animate-message ${
           isOwn 
             ? 'bg-[var(--primary)] text-[var(--primary-fg)] font-medium rounded-tr-none shadow-[0_4px_12px_rgba(37,211,102,0.12)]' 
             : 'bg-[var(--card-bg)] text-[var(--foreground)] border border-[var(--card-border)] rounded-tl-none'

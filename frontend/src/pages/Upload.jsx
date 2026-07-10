@@ -47,7 +47,7 @@ export default function Upload() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-16 w-full flex flex-col justify-center">
+    <div className="max-w-2xl mx-auto px-6 py-16 w-full flex flex-col justify-center animate-page-entry">
       {/* Heading */}
       <p className="font-heading text-xs font-semibold uppercase tracking-[0.2em] text-[var(--primary)] mb-3">
         Step 1 of 3
