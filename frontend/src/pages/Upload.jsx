@@ -49,50 +49,50 @@ export default function Upload() {
   return (
     <div className="max-w-2xl mx-auto px-6 py-16 w-full flex flex-col justify-center">
       {/* Heading */}
-      <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--primary)] mb-3 drop-shadow-[0_0_4px_rgba(80,227,194,0.15)]">
+      <p className="font-heading text-xs font-semibold uppercase tracking-[0.2em] text-[var(--primary)] mb-3">
         Step 1 of 3
       </p>
-      <h1 className="font-heading text-4xl md:text-5xl font-bold tracking-tight text-[var(--foreground)] mb-3 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
-        Paste Your Chat History
+      <h1 className="echo-title text-4xl md:text-5xl text-[var(--foreground)] mb-4">
+        Paste your chat history
       </h1>
-      <p className="text-sm text-[var(--foreground-muted)] leading-relaxed mb-8">
-        Export a WhatsApp chat (without media) and paste the raw text below.
+      <p className="text-[13px] md:text-sm text-[var(--foreground-muted)] leading-relaxed mb-8 font-sans">
+        Export a WhatsApp chat (without media) and paste the raw text below to let EchoMind begin learning your unique style.
         <br />
-        <span className="font-mono text-[11px] opacity-75 inline-block mt-2 px-2.5 py-1 rounded bg-[var(--background-subtle)] border border-[var(--input-border)] shadow-[inset_1px_1px_2px_rgba(0,0,0,0.03)] dark:shadow-[inset_1px_1px_2px_rgba(0,0,0,0.2)]">
+        <span className="inline-block mt-3 px-3.5 py-2 rounded-[20px] bg-[var(--card-bg)] border border-[var(--card-border)] text-xs text-[var(--foreground)] font-heading">
           Settings → Chats → Export Chat → Without Media
         </span>
       </p>
 
       {/* Tactile Card Panel */}
-      <div className="skeu-raised p-6 md:p-8 bg-[var(--card-bg)]">
+      <div className="echo-card p-6 md:p-8 bg-[var(--surface)]">
         <textarea
           value={rawText}
           onChange={e => setRawText(e.target.value)}
           placeholder={"12/07/2025, 9:14 PM - Alex: hey are we still on for tomorrow?\n12/07/2025, 9:15 PM - You: yeah, 8pm at the usual spot!"}
-          className="w-full h-64 p-4 font-mono text-[13px] leading-relaxed rounded-xl skeu-input resize-none"
+          className="w-full h-64 p-5 rounded-2xl bg-[var(--background-subtle)] border border-[var(--card-border)] focus:border-[var(--primary)]/30 focus:outline-none transition-all duration-300 resize-none font-sans text-sm text-[var(--foreground)] placeholder-[var(--foreground-muted)]/50"
         />
 
         {/* Error */}
         {error && (
-          <div className="flex gap-3 items-start mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-sm shadow-[inset_1px_1px_3px_rgba(239,68,68,0.1)]">
+          <div className="flex gap-3 items-start mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-500 text-[13px] font-sans">
             <AlertIcon />
             <span>{error}</span>
           </div>
         )}
 
-        {/* Tactile Action Button */}
+        {/* Action Button */}
         <div className="mt-6 flex justify-end">
           <button
             onClick={handleAnalyze}
             disabled={!rawText.trim() || isLoading}
-            className={`inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold rounded-xl transition-all ${
+            className={`inline-flex items-center gap-2 px-8 py-3.5 text-sm font-semibold rounded-[20px] transition-all duration-300 ${
               !rawText.trim() || isLoading
-                ? "bg-[var(--background-subtle)] text-[var(--foreground-muted)] skeu-inset cursor-not-allowed pointer-events-none opacity-60"
-                : "skeu-btn-accent text-[var(--primary-fg)] font-bold shadow-[0_4px_12px_-2px_rgba(80,227,194,0.3)]"
+                ? "bg-[var(--card-bg)] text-[var(--foreground-muted)] border border-[var(--card-border)] cursor-not-allowed opacity-60"
+                : "echo-btn-primary"
             }`}
           >
             {isLoading && <Spinner />}
-            {isLoading ? 'Analyzing...' : 'Analyze Chat →'}
+            {isLoading ? 'Reading Chat...' : 'Continue'}
           </button>
         </div>
       </div>

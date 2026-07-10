@@ -33,33 +33,33 @@ export default function Layout({ children }) {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="min-h-screen flex flex-col bg-[var(--background)] transition-colors duration-300">
+    <div className="min-h-screen flex flex-col bg-[var(--background)] transition-all duration-300">
       {/* ─── HEADER ─────────────────────────────────────── */}
-      <header className="sticky top-0 z-50 bg-[var(--header-bg)] border-b border-[var(--input-border)] shadow-[0_2px_8px_rgba(0,0,0,0.08),inset_0_-1px_0_rgba(255,255,255,0.7)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.4),inset_0_-1px_0_rgba(255,255,255,0.05)]">
+      <header className="sticky top-0 z-50 bg-[var(--surface)]/80 backdrop-blur-md border-b border-[var(--card-border)] shadow-[0_2px_12px_rgba(0,0,0,0.02)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="font-heading text-2xl tracking-wide text-[var(--foreground)] drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]">
-            Echo<span className="text-[var(--primary)] font-bold">Mind</span>
+          <Link to="/" className="echo-title text-2xl font-semibold tracking-tight text-[var(--foreground)]">
+            Echo<span className="text-[var(--primary)]">Mind</span>
           </Link>
 
           {/* Nav */}
-          <nav className="flex items-center gap-4 font-text text-sm">
+          <nav className="flex items-center gap-4 text-[13px] font-medium font-heading">
             <Link
               to="/"
-              className={`px-4 py-2 rounded-lg font-medium transition-all ${
+              className={`px-4 py-2 rounded-[20px] transition-all duration-300 ${
                 isActive('/')
-                  ? "bg-[var(--input-bg)] text-[var(--primary)] skeu-inset pointer-events-none"
-                  : "text-[var(--foreground-muted)] skeu-btn-primary hover:text-[var(--foreground)]"
+                  ? "bg-[var(--card-bg)] text-[var(--primary)] border border-[var(--card-border)] shadow-[0_2px_8px_rgba(0,0,0,0.02)] pointer-events-none"
+                  : "text-[var(--foreground-muted)] hover:text-[var(--foreground)] hover:translate-y-[-1px] active:translate-y-[0px]"
               }`}
             >
               Home
             </Link>
             <Link
               to="/upload"
-              className={`px-4 py-2 rounded-lg font-medium transition-all ${
+              className={`px-4 py-2 rounded-[20px] transition-all duration-300 ${
                 isActive('/upload')
-                  ? "bg-[var(--input-bg)] text-[var(--primary)] skeu-inset pointer-events-none"
-                  : "text-[var(--foreground-muted)] skeu-btn-primary hover:text-[var(--foreground)]"
+                  ? "bg-[var(--card-bg)] text-[var(--primary)] border border-[var(--card-border)] shadow-[0_2px_8px_rgba(0,0,0,0.02)] pointer-events-none"
+                  : "text-[var(--foreground-muted)] hover:text-[var(--foreground)] hover:translate-y-[-1px] active:translate-y-[0px]"
               }`}
             >
               Create Clone
@@ -69,7 +69,7 @@ export default function Layout({ children }) {
             <button
               onClick={toggleTheme}
               aria-label="Toggle theme"
-              className="p-2 rounded-lg skeu-btn-primary text-[var(--foreground-muted)] hover:text-[var(--foreground)] flex items-center justify-center border border-[var(--card-border)]"
+              className="w-9 h-9 rounded-[20px] bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--foreground-muted)] hover:text-[var(--foreground)] flex items-center justify-center hover:translate-y-[-1.5px] active:translate-y-[0.5px] shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all duration-300 cursor-pointer"
             >
               {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
             </button>

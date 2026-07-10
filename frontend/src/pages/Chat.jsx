@@ -35,16 +35,16 @@ function TypingDots() {
 
 function MessageBubble({ msg, isOwn }) {
   return (
-    <div className={`flex w-full ${isOwn ? 'justify-end' : 'justify-start'} mb-3`}>
-      <div className={`max-w-[70%] px-4 py-2.5 rounded-xl text-sm leading-relaxed ${
+    <div className={`flex w-full ${isOwn ? 'justify-end' : 'justify-start'} mb-4`}>
+      <div className={`max-w-[70%] px-4.5 py-3 rounded-2xl text-[13.5px] leading-relaxed shadow-sm font-sans ${
         isOwn 
-          ? 'bg-[var(--primary)] text-[var(--primary-fg)] font-medium rounded-br-sm shadow-[2px_2px_6px_rgba(0,0,0,0.15),inset_1px_1px_0px_rgba(255,255,255,0.2)]' 
-          : 'skeu-inset rounded-bl-sm text-[var(--foreground)] border border-black/5 dark:border-white/5'
+          ? 'bg-[var(--primary)] text-[var(--primary-fg)] font-medium rounded-tr-none shadow-[0_4px_12px_rgba(37,211,102,0.12)]' 
+          : 'bg-[var(--card-bg)] text-[var(--foreground)] border border-[var(--card-border)] rounded-tl-none'
       }`}>
         <p className="whitespace-pre-wrap">{msg.text}</p>
         {msg.timestamp && (
-          <p className={`text-[10px] mt-1 ${
-            isOwn ? 'text-[var(--primary-fg)]/70 text-right' : 'text-[var(--foreground-muted)] text-right'
+          <p className={`text-[9px] mt-1.5 ${
+            isOwn ? 'text-[var(--primary-fg)]/60 text-right font-medium' : 'text-[var(--foreground-muted)] text-right font-medium'
           }`}>{msg.timestamp}</p>
         )}
       </div>
@@ -100,45 +100,45 @@ export default function Chat() {
   return (
     <div className="flex h-[calc(100vh-64px)] max-w-6xl mx-auto w-full p-6 gap-6">
       {/* ── Sidebar ── */}
-      <div className="w-72 shrink-0 flex flex-col gap-4 overflow-y-auto pr-1">
+      <div className="w-80 shrink-0 flex flex-col gap-4 overflow-y-auto pr-1">
         <PersonalityCard profile={styleProfile} targetSender={targetSender} />
 
         {error && (
-          <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-sm shadow-[inset_1px_1px_3px_rgba(239,68,68,0.1)] leading-relaxed">
+          <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-500 text-sm shadow-sm leading-relaxed font-sans">
             ⚠ {error}
           </div>
         )}
       </div>
 
       {/* ── Chat Area ── */}
-      <div className="flex-1 flex flex-col skeu-raised overflow-hidden min-w-0 bg-[var(--card-bg)]">
+      <div className="flex-1 flex flex-col echo-card overflow-hidden min-w-0 bg-[var(--surface)]">
         {/* Chat header */}
-        <div className="px-5 h-14 border-b border-[var(--input-border)] flex items-center gap-3 shrink-0 shadow-[inset_0_-1px_0_rgba(255,255,255,0.05)]">
-          <div className="w-9 h-9 rounded-full flex items-center justify-center transition-all bg-[var(--primary)] text-[var(--primary-fg)] font-bold text-sm shadow-[inset_1px_1px_0px_rgba(255,255,255,0.2)]">
+        <div className="px-5 h-16 border-b border-[var(--card-border)] flex items-center gap-3 shrink-0 bg-[var(--surface)]">
+          <div className="w-10 h-10 rounded-full flex items-center justify-center bg-[var(--primary)] text-[var(--primary-fg)] font-bold text-sm shadow-sm">
             {targetSender.charAt(0).toUpperCase()}
           </div>
           <div>
-            <p className="font-heading text-base font-bold text-[var(--foreground)] leading-none mb-1">{targetSender} (Clone)</p>
-            <p className={`text-[10px] ${isTyping ? 'text-[var(--primary)] font-bold animate-pulse' : 'text-[var(--foreground-muted)]'}`}>
-              {isTyping ? 'typing...' : 'powered by local LLM'}
+            <p className="font-heading text-base font-semibold text-[var(--foreground)] leading-none mb-1">{targetSender} (Clone)</p>
+            <p className={`text-[10px] font-medium ${isTyping ? 'text-[var(--primary)] animate-pulse' : 'text-[var(--foreground-muted)]'}`}>
+              {isTyping ? 'typing...' : 'grounded in conversation history'}
             </p>
           </div>
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-5 bg-[var(--background-subtle)] shadow-[inset_0_4px_10px_rgba(0,0,0,0.02)] dark:shadow-[inset_0_4px_10px_rgba(0,0,0,0.25)]">
+        <div className="flex-1 overflow-y-auto p-6 bg-[var(--background-subtle)]/30">
           {messages.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-[var(--foreground-muted)] text-center gap-3">
-              <span className="text-3xl filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)]">💬</span>
-              <p className="text-sm font-semibold text-[var(--foreground)]">Start talking to your clone</p>
-              <p className="text-xs max-w-xs opacity-75">Replies are generated based on the learned style profile.</p>
+              <span className="text-3xl filter drop-shadow-sm">💬</span>
+              <p className="text-sm font-semibold text-[var(--foreground)] font-heading">Start talking to your clone</p>
+              <p className="text-xs max-w-xs opacity-75 font-sans">Replies are generated based on the learned style profile.</p>
             </div>
           ) : (
             messages.map((msg, i) => <MessageBubble key={i} msg={msg} isOwn={msg.isOwn} />)
           )}
           {isTyping && (
-            <div className="flex justify-start mb-3">
-              <div className="px-4 py-2.5 rounded-xl skeu-inset border border-black/5 dark:border-white/5">
+            <div className="flex justify-start mb-4">
+              <div className="px-4.5 py-3 rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)] rounded-tl-none shadow-sm">
                 <TypingDots />
               </div>
             </div>
@@ -149,7 +149,7 @@ export default function Chat() {
         {/* Input */}
         <form
           onSubmit={handleSend}
-          className="p-4 border-t border-[var(--input-border)] flex gap-3 shrink-0 bg-[var(--card-bg)] shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
+          className="p-4 border-t border-[var(--card-border)] flex gap-3 shrink-0 bg-[var(--surface)] items-center"
         >
           <input
             type="text"
@@ -157,15 +157,15 @@ export default function Chat() {
             onChange={e => setInput(e.target.value)}
             placeholder={`Message ${targetSender}...`}
             disabled={isTyping}
-            className="flex-1 px-4 py-3 rounded-xl skeu-input font-text text-sm"
+            className="flex-1 px-5 py-3.5 rounded-[24px] bg-[var(--background-subtle)] border border-[var(--card-border)] focus:border-[var(--primary)]/30 focus:outline-none transition-all duration-300 font-sans text-sm text-[var(--foreground)] placeholder-[var(--foreground-muted)]/50"
           />
           <button
             type="submit"
             disabled={!input.trim() || isTyping}
-            className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all ${
+            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 shrink-0 cursor-pointer ${
               !input.trim() || isTyping
-                ? "bg-[var(--background-subtle)] text-[var(--foreground-muted)] skeu-inset opacity-50 cursor-not-allowed pointer-events-none"
-                : "skeu-btn-accent text-[var(--primary-fg)] font-bold shadow-[0_4px_12px_-2px_rgba(80,227,194,0.3)]"
+                ? "bg-[var(--card-bg)] text-[var(--foreground-muted)] border border-[var(--card-border)] opacity-50 cursor-not-allowed pointer-events-none"
+                : "echo-btn-primary"
             }`}
           >
             <SendIcon />

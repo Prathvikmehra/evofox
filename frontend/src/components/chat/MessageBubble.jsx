@@ -4,10 +4,10 @@ export default function MessageBubble({ message, isOwn, isTyping = false }) {
   return (
     <div className={`flex w-full ${isOwn ? 'justify-end' : 'justify-start'} mb-3`}>
       <div 
-        className={`max-w-[70%] px-4 py-2.5 rounded-xl text-sm leading-relaxed ${
+        className={`max-w-[70%] px-4.5 py-3 rounded-2xl text-[13.5px] leading-relaxed shadow-sm font-sans ${
           isOwn 
-            ? 'bg-[var(--primary)] text-[var(--primary-fg)] font-medium rounded-br-sm shadow-[2px_2px_6px_rgba(0,0,0,0.15),inset_1px_1px_0px_rgba(255,255,255,0.2)]' 
-            : 'skeu-inset rounded-bl-sm text-[var(--foreground)] border border-black/5 dark:border-white/5'
+            ? 'bg-[var(--primary)] text-[var(--primary-fg)] font-medium rounded-tr-none shadow-[0_4px_12px_rgba(37,211,102,0.12)]' 
+            : 'bg-[var(--card-bg)] text-[var(--foreground)] border border-[var(--card-border)] rounded-tl-none'
         }`}
       >
         {isTyping ? (
