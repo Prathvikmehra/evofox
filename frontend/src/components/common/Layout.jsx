@@ -32,7 +32,7 @@ export default function Layout({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, user, logout, isLoading: authLoading } = useAuth();
   const { logout: auth0Logout } = useAuth0();
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -101,7 +101,10 @@ export default function Layout({ children }) {
             </button>
 
             {/* ── Auth section ── */}
-            {isAuthenticated ? (
+            {authLoading ? (
+              /* Skeleton pill while auth state resolves — prevents Login/Sign Up flash */
+              <div className="w-24 h-8 rounded-[20px] animate-pulse" style={{ background: 'var(--card-bg)' }} />
+            ) : isAuthenticated ? (
               /* Profile pill + dropdown */
               <div className="relative" ref={dropdownRef}>
                 <button

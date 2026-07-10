@@ -63,10 +63,6 @@ export default function Landing() {
               >
                 Create your clone
               </Link>
-              <span className="font-heading text-xs text-[var(--foreground-muted)] flex items-center gap-2 px-4 py-2.5 rounded-[20px] bg-[var(--card-bg)] border border-[var(--card-border)] shadow-sm">
-                <span className="w-2 h-2 rounded-full bg-[var(--primary)] animate-pulse shadow-[0_0_6px_var(--primary)]" />
-                .txt export in, live clone out
-              </span>
             </div>
 
           </div>
