@@ -39,10 +39,27 @@ export default function Landing() {
               learning your unique way of speaking, your experiences, and your thoughts from your chat exports,
               so you can revisit, reflect, and talk to your past self.
             </p>
-            <div className="flex flex-col sm:flex-row items-center md:items-start justify-center md:justify-start gap-6">
+            <div className="flex flex-wrap items-center md:items-start justify-center md:justify-start gap-4">
+              <Link
+                id="landing-get-started-btn"
+                to="/signup"
+                className="px-8 py-4 rounded-xl font-heading font-semibold text-sm transition-all hover:scale-[1.03] active:scale-[0.98]"
+                style={{
+                  background: "linear-gradient(135deg, var(--primary), var(--primary-light))",
+                  color: "var(--primary-fg)",
+                  boxShadow: "0 4px 20px rgba(37,211,102,0.30)",
+                }}
+              >
+                Get Started
+              </Link>
               <Link
                 to="/upload"
-                className="echo-btn-primary px-8 py-4 text-sm font-semibold inline-block"
+                className="px-8 py-4 rounded-xl font-heading font-semibold text-sm transition-all hover:scale-[1.03] active:scale-[0.98]"
+                style={{
+                  background: "linear-gradient(135deg, var(--primary), var(--primary-light))",
+                  color: "var(--primary-fg)",
+                  boxShadow: "0 4px 20px rgba(37,211,102,0.30)",
+                }}
               >
                 Create your clone
               </Link>
@@ -51,6 +68,7 @@ export default function Landing() {
                 .txt export in, live clone out
               </span>
             </div>
+
           </div>
 
           {/* ── Right: Spline 3D Scene ── */}

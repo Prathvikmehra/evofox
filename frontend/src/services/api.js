@@ -39,3 +39,32 @@ export async function getChatHistory(sessionId) {
   const res = await fetch(`${BASE}/chat/${sessionId}/history`);
   return handle(res);
 }
+
+// ── Auth endpoints ────────────────────────────────────────────────────────────
+
+export async function signupUser(name, email, password) {
+  const res = await fetch(`${BASE}/auth/signup`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, email, password }),
+  });
+  return handle(res);
+}
+
+export async function loginUser(email, password) {
+  const res = await fetch(`${BASE}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+  return handle(res);
+}
+
+export async function syncGoogleUser(name, email, auth0Id) {
+  const res = await fetch(`${BASE}/auth/google-sync`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, email, auth0Id }),
+  });
+  return handle(res);
+}

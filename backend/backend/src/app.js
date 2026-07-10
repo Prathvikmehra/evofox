@@ -11,6 +11,7 @@ const parseRoutes    = require("./routes/parseRoutes");
 const analyzeRoutes  = require("./routes/analyzeRoutes");
 const generateRoutes = require("./routes/generateRoutes");
 const authRoutes     = require("./routes/authRoutes");
+const googleAuthRoutes = require("./routes/googleAuthRoutes");
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.get("/health", (_req, res) => {
 
 // ── API routes ───────────────────────────────────────────────────────────────
 app.use("/api", authRoutes);      // /api/auth/signup  /api/auth/login
+app.use("/api", googleAuthRoutes); // /api/auth/google-sync
 app.use("/api", parseRoutes);
 app.use("/api", analyzeRoutes);
 app.use("/api", generateRoutes);

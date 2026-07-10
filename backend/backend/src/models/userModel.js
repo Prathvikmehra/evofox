@@ -20,6 +20,17 @@ async function ensureUsersTable() {
       created_at TIMESTAMP           DEFAULT NOW()
     )
   `);
+
+  // ── Additive migrations (idempotent) ─────────────────────────────────────
+  // Allow Google-auth users who have no password
+  await pool.query(`
+    ALTER TABLE users ALTER COLUMN password DROP NOT NULL
+  `).catch(() => {/* already nullable — ignore */});
+
+  // Store Auth0 subject ID for Google-auth users
+  await pool.query(`
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS auth0_id VARCHAR(255) UNIQUE
+  `);
 }
 
 // ── Queries ───────────────────────────────────────────────────────────────────
@@ -70,4 +81,23 @@ async function findUserById(id) {
   return rows[0] ?? null;
 }
 
-module.exports = { ensureUsersTable, createUser, findUserByEmail, findUserById };
+/**
+ * Insert a new user authenticated via Google / Auth0.
+ * Password is intentionally NULL — these users authenticate via Auth0, not
+ * bcrypt. The auth0_id uniquely identifies them across sign-ins.
+ * @param {string} name
+ * @param {string} email
+ * @param {string} auth0Id   — Auth0 subject string, e.g. "google-oauth2|..."
+ * @returns {Promise<Object>}  The newly created row (id, name, email).
+ */
+async function createGoogleUser(name, email, auth0Id) {
+  const { rows } = await pool.query(
+    `INSERT INTO users (name, email, auth0_id)
+     VALUES ($1, $2, $3)
+     RETURNING id, name, email, created_at`,
+    [name, email, auth0Id]
+  );
+  return rows[0];
+}
+
+module.exports = { ensureUsersTable, createUser, findUserByEmail, findUserById, createGoogleUser };
