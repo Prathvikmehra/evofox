@@ -1,111 +1,192 @@
+@import "tailwindcss";
+
+/* ===================== FONTS ===================== */
+@theme {
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-serif: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-mono: "Fira Code", "Cascadia Code", Consolas, monospace;
+
+  /* ── EchoMind font families (avoid 'font-display' CSS keyword conflict) ── */
+  --font-heading: "Instrument Serif", serif;
+  --font-text: "Space Grotesk", sans-serif;
+
+  /* ── EchoMind ink palette ── */
+  --color-ink-950: #0F0F14;
+  --color-ink-900: #14141A;
+  --color-ink-800: #1E1E26;
+  --color-ink-700: #2A2A34;
+  --color-ink-600: #3A3A47;
+
+  /* ── EchoMind surface / text ── */
+  --color-parchment: #F2F0EA;
+
+  /* ── EchoMind accent — teal ── */
+  --color-echo: #4FD6C4;
+  --color-echo-dim: #2E7A70;
+  --color-echo-bright: #7CEEDD;
+
+  /* ── EchoMind accent — amber ── */
+  --color-signal: #E8B354;
+  --color-signal-dim: #8A6A2F;
+}
+
+/* ===================== DESIGN TOKENS ===================== */
+/* 
+ * We use CSS custom properties on :root for light mode
+ * and override them on the .dark class for dark mode.
+ * Tailwind utilities (bg-background, text-foreground, etc.)
+ * reference these variables.
+ */
+
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  /* Light mode palette */
+  --background:        #f7f8fa;
+  --background-subtle: #eef0f3;
+  --foreground:        #0d1117;
+  --foreground-muted:  #6b7280;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --card-bg:           #ffffff;
+  --card-border:       #e2e4e9;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --primary:           #0d9b7c;   /* teal, darker for light bg contrast */
+  --primary-light:     #0fba95;
+  --primary-fg:        #ffffff;   /* text on primary button */
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
+  --gold:              #c97c18;   /* amber, darker for light bg */
+  --nav-active:        #0d9b7c;
+  --nav-inactive:      #6b7280;
+
+  --input-bg:          #ffffff;
+  --input-border:      #d1d5db;
+
+  --header-bg:         rgba(247, 248, 250, 0.85);
+  --glow:              rgba(13, 155, 124, 0.12);
+}
+
+.dark {
+  /* Dark mode palette — matches the design image exactly */
+  --background:        #171a1d;
+  --background-subtle: #1e2126;
+  --foreground:        #e8eaed;
+  --foreground-muted:  #8b949e;
+
+  --card-bg:           #1e2126;
+  --card-border:       #2d3139;
+
+  --primary:           #50e3c2;   /* exact teal from image */
+  --primary-light:     #6fecd0;
+  --primary-fg:        #0d1117;   /* dark text on teal button */
+
+  --gold:              #f5a623;   /* amber from pipeline cards */
+  --nav-active:        #50e3c2;
+  --nav-inactive:      #8b949e;
+
+  --input-bg:          #1e2126;
+  --input-border:      #2d3139;
+
+  --header-bg:         rgba(23, 26, 29, 0.85);
+  --glow:              rgba(80, 227, 194, 0.06);
+}
+
+/* ===================== BASE RESET ===================== */
+/* Wrapped in @layer base so Tailwind utility classes (pt-*, px-*, etc.) */
+/* correctly override these resets in the cascade.                        */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    min-height: 100vh;
+    /* Subtle radial teal glow top-left — as in the image */
+    background-image:
+      radial-gradient(ellipse 60% 40% at 5% 0%, var(--glow) 0%, transparent 70%);
+    background-attachment: fixed;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+@layer base {
+  /* ===================== SCROLLBAR ===================== */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--background); }
+  ::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 3px; }
+
+  /* ===================== SELECTION ===================== */
+  ::selection { background: var(--primary); color: var(--primary-fg); }
+}
+
+@layer components {
+  /* ===================== GLASS CARD ===================== */
+  .glass {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
   }
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
+  /* ===================== TRANSITIONS ===================== */
+  .theme-transition,
+  .theme-transition * {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+
+  /* ===================== ECHOMIND — PAGE WRAPPER ===================== */
+  /* Applied to the landing page root div to fully override EvoFox body styles   */
+  .echomind-page {
+    background-color: #0F0F14;  /* ink-950 */
+    background-image:
+      radial-gradient(circle at 20% 0%, rgba(79, 214, 196, 0.08), transparent 45%),
+      radial-gradient(circle at 85% 20%, rgba(232, 179, 84, 0.06), transparent 40%);
+    color: #F2F0EA; /* parchment */
+    font-family: "Space Grotesk", sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ===================== ECHOMIND — SIGNATURE ECHO EFFECT ===================== */
+  /* A faded, slightly offset duplicate of the hero headline sitting behind the  */
+  /* real text, as if the words are being repeated back.                          */
+  .echo-text {
+    position: relative;
+    display: inline-block;
+  }
+  .echo-text::after {
+    content: attr(data-echo);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    color: #4FD6C4; /* echo teal */
+    opacity: 0.16;
+    transform: translate(6px, 10px);
+    z-index: -1;
+    filter: blur(0.5px);
+    pointer-events: none;
+  }
+
+  /* ===================== ECHOMIND — PULSE DOT ===================== */
+  .pulse-dot {
+    animation: pulse-soft 2.2s ease-in-out infinite;
   }
 }
 
-body {
-  margin: 0;
+/* @keyframes must be outside @layer */
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.35; }
+  50%       { opacity: 0.85; }
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
-
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+@media (prefers-reduced-motion: reduce) {
+  .pulse-dot,
+  .echo-text::after {
+    animation: none !important;
   }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
-}
-
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
 }
