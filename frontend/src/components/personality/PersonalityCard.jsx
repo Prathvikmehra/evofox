@@ -4,103 +4,69 @@ export default function PersonalityCard({ profile, targetSender }) {
   if (!profile) return null;
 
   return (
-    <div style={{
-      background: 'var(--card-bg)',
-      border: '1px solid var(--card-border)',
-      borderRadius: '12px',
-      padding: '1.5rem',
-    }}>
+    <div className="skeu-raised p-6 bg-[var(--card-bg)] border border-[var(--card-border)]">
       {/* Header */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <p style={{
-          fontFamily: 'var(--font-mono)',
-          fontSize: '0.65rem',
-          letterSpacing: '0.15em',
-          textTransform: 'uppercase',
-          color: 'var(--primary)',
-          marginBottom: '0.25rem',
-        }}>Style Profile</p>
-        <h3 style={{
-          fontFamily: 'var(--font-serif)',
-          fontSize: '1.25rem',
-          fontWeight: 600,
-          color: 'var(--foreground)',
-        }}>
+      <div className="mb-6">
+        <p className="font-mono text-[9px] font-bold tracking-widest uppercase text-[var(--primary)] mb-1 drop-shadow-[0_0_4px_rgba(80,227,194,0.15)]">
+          Style Profile
+        </p>
+        <h3 className="font-heading text-xl font-bold text-[var(--foreground)] drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]">
           {targetSender}
         </h3>
       </div>
 
       {/* Stats */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+      <div className="flex flex-col gap-5">
         {/* Avg word count */}
-        <div>
-          <p style={{ fontSize: '0.75rem', color: 'var(--foreground-muted)', marginBottom: '0.25rem' }}>Avg reply length</p>
-          <p style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--foreground)' }}>
-            {profile.averageWordCount ?? 0} <span style={{ fontWeight: 400, color: 'var(--foreground-muted)', fontSize: '0.85rem' }}>words</span>
+        <div className="p-3.5 skeu-inset">
+          <p className="text-[10px] uppercase font-mono tracking-wider text-[var(--foreground-muted)] mb-1">
+            Avg reply length
+          </p>
+          <p className="text-base font-bold text-[var(--foreground)]">
+            {profile.averageWordCount ?? 0} <span className="font-normal text-xs text-[var(--foreground-muted)]">words</span>
           </p>
         </div>
 
         {/* Emojis */}
         <div>
-          <p style={{ fontSize: '0.75rem', color: 'var(--foreground-muted)', marginBottom: '0.5rem' }}>
-            Top emojis <span style={{ color: 'var(--primary)' }}>({profile.emojiUsagePercent ?? 0}% of messages)</span>
+          <p className="text-[11px] font-medium text-[var(--foreground-muted)] mb-2.5">
+            Top emojis <span className="text-[var(--primary)] font-bold">({profile.emojiUsagePercent ?? 0}%)</span>
           </p>
-          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <div className="flex gap-2 flex-wrap">
             {profile.topEmojis?.length > 0 ? profile.topEmojis.map((e, i) => (
-              <span key={i} style={{
-                fontSize: '1.25rem',
-                background: 'var(--background-subtle)',
-                border: '1px solid var(--card-border)',
-                borderRadius: '6px',
-                padding: '4px 8px',
-              }}>{e}</span>
+              <span key={i} className="text-lg skeu-raised w-10 h-10 flex items-center justify-center bg-[var(--card-bg)] border border-[var(--card-border)] hover:scale-105 active:scale-95 duration-100 cursor-default select-none">
+                {e}
+              </span>
             )) : (
-              <span style={{ fontSize: '0.8rem', color: 'var(--foreground-muted)', fontStyle: 'italic' }}>None detected</span>
+              <span className="text-xs text-[var(--foreground-muted)] italic">None detected</span>
             )}
           </div>
         </div>
 
         {/* Common phrases */}
         <div>
-          <p style={{ fontSize: '0.75rem', color: 'var(--foreground-muted)', marginBottom: '0.5rem' }}>Common phrases</p>
-          <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+          <p className="text-[11px] font-medium text-[var(--foreground-muted)] mb-2.5">
+            Common phrases
+          </p>
+          <div className="flex gap-2 flex-wrap">
             {profile.commonPhrases?.length > 0 ? profile.commonPhrases.map((p, i) => (
-              <span key={i} style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.72rem',
-                background: 'rgba(80,227,194,0.08)',
-                color: 'var(--primary)',
-                border: '1px solid rgba(80,227,194,0.15)',
-                borderRadius: '6px',
-                padding: '3px 8px',
-              }}>"{p}"</span>
+              <span key={i} className="font-mono text-[11px] font-semibold text-[var(--primary)] px-3 py-1.5 rounded-lg skeu-inset bg-[var(--input-bg)] shadow-[inset_1px_1px_2px_rgba(0,0,0,0.05)] border border-black/5 dark:border-white/5">
+                "{p}"
+              </span>
             )) : (
-              <span style={{ fontSize: '0.8rem', color: 'var(--foreground-muted)', fontStyle: 'italic' }}>None detected</span>
+              <span className="text-xs text-[var(--foreground-muted)] italic">None detected</span>
             )}
           </div>
         </div>
 
         {/* Style tags */}
-        <div style={{
-          display: 'flex',
-          gap: '0.5rem',
-          paddingTop: '0.75rem',
-          borderTop: '1px solid var(--card-border)',
-        }}>
-          <span style={{
-            fontSize: '0.72rem',
-            background: 'var(--background-subtle)',
-            color: 'var(--foreground-muted)',
-            borderRadius: '6px',
-            padding: '3px 8px',
-          }}>{profile.capitalizationStyle}</span>
-          <span style={{
-            fontSize: '0.72rem',
-            background: 'var(--background-subtle)',
-            color: 'var(--foreground-muted)',
-            borderRadius: '6px',
-            padding: '3px 8px',
-          }}>{profile.punctuationStyle} punctuation</span>
+        <div className="flex gap-2 pt-4 border-t border-[var(--input-border)]">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--foreground-muted)] px-2.5 py-1 rounded-md bg-[var(--background-subtle)] border border-[var(--input-border)]">
+            {profile.capitalizationStyle}
+          </span>
+          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--foreground-muted)] px-2.5 py-1 rounded-md bg-[var(--background-subtle)] border border-[var(--input-border)]">
+            {profile.punctuationStyle} punct
+          </span>
         </div>
       </div>
     </div>

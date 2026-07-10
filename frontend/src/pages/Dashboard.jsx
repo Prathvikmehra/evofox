@@ -68,61 +68,28 @@ export default function Dashboard() {
   };
 
   return (
-    <div style={{
-      maxWidth: '560px',
-      margin: '0 auto',
-      padding: '4rem 2rem',
-      width: '100%',
-    }}>
+    <div className="max-w-xl mx-auto px-6 py-16 w-full flex flex-col justify-center">
       {/* Heading */}
-      <p style={{
-        fontFamily: 'var(--font-mono)',
-        fontSize: '0.7rem',
-        fontWeight: 500,
-        letterSpacing: '0.2em',
-        textTransform: 'uppercase',
-        color: 'var(--primary)',
-        marginBottom: '1rem',
-      }}>
+      <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--primary)] mb-3 drop-shadow-[0_0_4px_rgba(80,227,194,0.15)]">
         Step 2 of 3
       </p>
-      <h1 style={{
-        fontFamily: 'var(--font-serif)',
-        fontSize: 'clamp(2rem, 5vw, 3rem)',
-        fontWeight: 700,
-        letterSpacing: '-0.02em',
-        color: 'var(--foreground)',
-        marginBottom: '0.75rem',
-      }}>
+      <h1 className="font-heading text-4xl md:text-5xl font-bold tracking-tight text-[var(--foreground)] mb-3 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
         Who to clone?
       </h1>
-      <p style={{
-        fontSize: '0.9rem',
-        color: 'var(--foreground-muted)',
-        lineHeight: 1.65,
-        marginBottom: '2.5rem',
-      }}>
-        We found <strong style={{ color: 'var(--foreground)' }}>{senders.length} participants</strong> in this chat.
+      <p className="text-sm text-[var(--foreground-muted)] leading-relaxed mb-8">
+        We found <strong className="text-[var(--foreground)] font-semibold">{senders.length} participants</strong> in this chat.
         Pick whose communication style to learn.
       </p>
 
       {/* Error */}
       {error && (
-        <div style={{
-          marginBottom: '1.25rem',
-          padding: '0.875rem 1rem',
-          background: 'rgba(239, 68, 68, 0.08)',
-          border: '1px solid rgba(239, 68, 68, 0.2)',
-          borderRadius: '8px',
-          color: '#ef4444',
-          fontSize: '0.85rem',
-        }}>
+        <div className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-sm shadow-[inset_1px_1px_3px_rgba(239,68,68,0.1)]">
           {error}
         </div>
       )}
 
       {/* Sender list */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
+      <div className="flex flex-col gap-4">
         {senders.map((sender, idx) => {
           const isSelected = selectedSender === sender;
           return (
@@ -130,47 +97,25 @@ export default function Dashboard() {
               key={idx}
               onClick={() => handleSelect(sender)}
               disabled={isLoading}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                width: '100%',
-                padding: '1rem 1.25rem',
-                background: isSelected ? 'var(--card-bg)' : 'var(--card-bg)',
-                border: `1px solid ${isSelected ? 'var(--primary)' : 'var(--card-border)'}`,
-                borderRadius: '10px',
-                cursor: isLoading ? 'not-allowed' : 'pointer',
-                opacity: isLoading && !isSelected ? 0.5 : 1,
-                transition: 'border-color 0.2s, transform 0.15s',
-                textAlign: 'left',
-              }}
-              onMouseEnter={e => { if (!isLoading) e.currentTarget.style.borderColor = 'var(--primary)'; }}
-              onMouseLeave={e => { if (!isSelected) e.currentTarget.style.borderColor = 'var(--card-border)'; }}
+              className={`flex items-center justify-between w-full p-4 md:p-5 rounded-xl transition-all ${
+                isSelected
+                  ? "bg-[var(--input-bg)] text-[var(--primary)] skeu-inset border border-[var(--border-primary-trans)] scale-[0.99] pointer-events-none"
+                  : "skeu-btn-primary hover:text-[var(--foreground)]"
+              } ${isLoading && !isSelected ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}`}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <div style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  background: 'var(--background-subtle)',
-                  border: '1px solid var(--card-border)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: 'var(--primary)',
-                }}>
+              <div className="flex items-center gap-4">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                  isSelected 
+                    ? "bg-[var(--background)] text-[var(--primary)] shadow-[0_0_8px_var(--primary-glow)]" 
+                    : "skeu-inset text-[var(--primary)]"
+                }`}>
                   <UserIcon />
                 </div>
-                <span style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: '1rem',
-                  fontWeight: 500,
-                  color: 'var(--foreground)',
-                }}>
+                <span className="font-text text-sm font-semibold text-[var(--foreground)]">
                   {sender}
                 </span>
               </div>
-              <div style={{ color: 'var(--foreground-muted)' }}>
+              <div className="text-[var(--foreground-muted)]">
                 {isSelected && isLoading ? <Spinner /> : <ChevronIcon />}
               </div>
             </button>

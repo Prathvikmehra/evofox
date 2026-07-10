@@ -47,115 +47,49 @@ export default function Upload() {
   };
 
   return (
-    <div style={{
-      maxWidth: '680px',
-      margin: '0 auto',
-      padding: '4rem 2rem',
-      width: '100%',
-    }}>
+    <div className="max-w-2xl mx-auto px-6 py-16 w-full flex flex-col justify-center">
       {/* Heading */}
-      <p style={{
-        fontFamily: 'var(--font-mono)',
-        fontSize: '0.7rem',
-        fontWeight: 500,
-        letterSpacing: '0.2em',
-        textTransform: 'uppercase',
-        color: 'var(--primary)',
-        marginBottom: '1rem',
-      }}>
+      <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--primary)] mb-3 drop-shadow-[0_0_4px_rgba(80,227,194,0.15)]">
         Step 1 of 3
       </p>
-      <h1 style={{
-        fontFamily: 'var(--font-serif)',
-        fontSize: 'clamp(2rem, 5vw, 3rem)',
-        fontWeight: 700,
-        letterSpacing: '-0.02em',
-        color: 'var(--foreground)',
-        marginBottom: '0.75rem',
-      }}>
+      <h1 className="font-heading text-4xl md:text-5xl font-bold tracking-tight text-[var(--foreground)] mb-3 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
         Paste Your Chat History
       </h1>
-      <p style={{
-        fontSize: '0.9rem',
-        color: 'var(--foreground-muted)',
-        lineHeight: 1.65,
-        marginBottom: '2.5rem',
-      }}>
+      <p className="text-sm text-[var(--foreground-muted)] leading-relaxed mb-8">
         Export a WhatsApp chat (without media) and paste the raw text below.
         <br />
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', opacity: 0.7 }}>
+        <span className="font-mono text-[11px] opacity-75 inline-block mt-2 px-2.5 py-1 rounded bg-[var(--background-subtle)] border border-[var(--input-border)] shadow-[inset_1px_1px_2px_rgba(0,0,0,0.03)] dark:shadow-[inset_1px_1px_2px_rgba(0,0,0,0.2)]">
           Settings → Chats → Export Chat → Without Media
         </span>
       </p>
 
-      {/* Card */}
-      <div style={{
-        background: 'var(--card-bg)',
-        border: '1px solid var(--card-border)',
-        borderRadius: '12px',
-        padding: '1.5rem',
-      }}>
+      {/* Tactile Card Panel */}
+      <div className="skeu-raised p-6 md:p-8 bg-[var(--card-bg)]">
         <textarea
           value={rawText}
           onChange={e => setRawText(e.target.value)}
           placeholder={"12/07/2025, 9:14 PM - Alex: hey are we still on for tomorrow?\n12/07/2025, 9:15 PM - You: yeah, 8pm at the usual spot!"}
-          style={{
-            width: '100%',
-            height: '260px',
-            background: 'transparent',
-            border: '1px solid var(--input-border)',
-            borderRadius: '8px',
-            padding: '1rem',
-            fontFamily: 'var(--font-mono)',
-            fontSize: '0.8rem',
-            lineHeight: 1.6,
-            color: 'var(--foreground)',
-            resize: 'vertical',
-            outline: 'none',
-            transition: 'border-color 0.2s',
-          }}
-          onFocus={e => { e.target.style.borderColor = 'var(--primary)'; }}
-          onBlur={e => { e.target.style.borderColor = 'var(--input-border)'; }}
+          className="w-full h-64 p-4 font-mono text-[13px] leading-relaxed rounded-xl skeu-input resize-none"
         />
 
         {/* Error */}
         {error && (
-          <div style={{
-            display: 'flex',
-            gap: '0.5rem',
-            alignItems: 'flex-start',
-            marginTop: '1rem',
-            padding: '0.875rem 1rem',
-            background: 'rgba(239, 68, 68, 0.08)',
-            border: '1px solid rgba(239, 68, 68, 0.2)',
-            borderRadius: '8px',
-            color: '#ef4444',
-            fontSize: '0.85rem',
-          }}>
+          <div className="flex gap-3 items-start mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-sm shadow-[inset_1px_1px_3px_rgba(239,68,68,0.1)]">
             <AlertIcon />
             <span>{error}</span>
           </div>
         )}
 
-        {/* Button */}
-        <div style={{ marginTop: '1.25rem', display: 'flex', justifyContent: 'flex-end' }}>
+        {/* Tactile Action Button */}
+        <div className="mt-6 flex justify-end">
           <button
             onClick={handleAnalyze}
             disabled={!rawText.trim() || isLoading}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              background: !rawText.trim() || isLoading ? 'var(--card-border)' : 'var(--primary)',
-              color: !rawText.trim() || isLoading ? 'var(--foreground-muted)' : 'var(--primary-fg)',
-              border: 'none',
-              borderRadius: '8px',
-              padding: '0.7rem 1.5rem',
-              fontFamily: 'var(--font-sans)',
-              fontSize: '0.9rem',
-              fontWeight: 600,
-              cursor: !rawText.trim() || isLoading ? 'not-allowed' : 'pointer',
-              transition: 'background 0.2s, opacity 0.2s',
-            }}
+            className={`inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold rounded-xl transition-all ${
+              !rawText.trim() || isLoading
+                ? "bg-[var(--background-subtle)] text-[var(--foreground-muted)] skeu-inset cursor-not-allowed pointer-events-none opacity-60"
+                : "skeu-btn-accent text-[var(--primary-fg)] font-bold shadow-[0_4px_12px_-2px_rgba(80,227,194,0.3)]"
+            }`}
           >
             {isLoading && <Spinner />}
             {isLoading ? 'Analyzing...' : 'Analyze Chat →'}

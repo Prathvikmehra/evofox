@@ -33,77 +33,43 @@ export default function Layout({ children }) {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div className="min-h-screen flex flex-col bg-[var(--background)] transition-colors duration-300">
       {/* ─── HEADER ─────────────────────────────────────── */}
-      <header style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 50,
-        background: 'var(--header-bg)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-        borderBottom: '1px solid var(--card-border)',
-      }}>
-        <div style={{
-          maxWidth: '1200px',
-          margin: '0 auto',
-          padding: '0 2rem',
-          height: '64px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
+      <header className="sticky top-0 z-50 bg-[var(--header-bg)] border-b border-[var(--input-border)] shadow-[0_2px_8px_rgba(0,0,0,0.08),inset_0_-1px_0_rgba(255,255,255,0.7)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.4),inset_0_-1px_0_rgba(255,255,255,0.05)]">
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-            <span style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: '1.4rem',
-              fontWeight: 700,
-              color: 'var(--foreground)',
-              letterSpacing: '-0.01em',
-            }}>Echo</span>
-            <span style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: '1.4rem',
-              fontWeight: 700,
-              color: 'var(--primary)',
-              letterSpacing: '-0.01em',
-            }}>Mind</span>
+          <Link to="/" className="font-heading text-2xl tracking-wide text-[var(--foreground)] drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]">
+            Echo<span className="text-[var(--primary)] font-bold">Mind</span>
           </Link>
 
           {/* Nav */}
-          <nav style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-            <Link to="/" style={{
-              textDecoration: 'none',
-              fontSize: '0.875rem',
-              fontWeight: 500,
-              color: isActive('/') ? 'var(--nav-active)' : 'var(--nav-inactive)',
-              transition: 'color 0.2s',
-            }}>Home</Link>
-            <Link to="/upload" style={{
-              textDecoration: 'none',
-              fontSize: '0.875rem',
-              fontWeight: 500,
-              color: isActive('/upload') ? 'var(--nav-active)' : 'var(--nav-inactive)',
-              transition: 'color 0.2s',
-            }}>Create Clone</Link>
+          <nav className="flex items-center gap-4 font-text text-sm">
+            <Link
+              to="/"
+              className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                isActive('/')
+                  ? "bg-[var(--input-bg)] text-[var(--primary)] skeu-inset pointer-events-none"
+                  : "text-[var(--foreground-muted)] skeu-btn-primary hover:text-[var(--foreground)]"
+              }`}
+            >
+              Home
+            </Link>
+            <Link
+              to="/upload"
+              className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                isActive('/upload')
+                  ? "bg-[var(--input-bg)] text-[var(--primary)] skeu-inset pointer-events-none"
+                  : "text-[var(--foreground-muted)] skeu-btn-primary hover:text-[var(--foreground)]"
+              }`}
+            >
+              Create Clone
+            </Link>
 
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
               aria-label="Toggle theme"
-              style={{
-                background: 'transparent',
-                border: '1px solid var(--card-border)',
-                borderRadius: '8px',
-                padding: '6px 8px',
-                cursor: 'pointer',
-                color: 'var(--foreground-muted)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'border-color 0.2s, color 0.2s',
-              }}
+              className="p-2 rounded-lg skeu-btn-primary text-[var(--foreground-muted)] hover:text-[var(--foreground)] flex items-center justify-center border border-[var(--card-border)]"
             >
               {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
             </button>
@@ -112,7 +78,7 @@ export default function Layout({ children }) {
       </header>
 
       {/* ─── MAIN ───────────────────────────────────────── */}
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <main className="flex-1 flex flex-col">
         {children}
       </main>
     </div>

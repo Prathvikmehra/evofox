@@ -39,53 +39,71 @@
  */
 
 :root {
-  /* Light mode palette */
-  --background:        #f7f8fa;
-  --background-subtle: #eef0f3;
-  --foreground:        #0d1117;
-  --foreground-muted:  #6b7280;
+  /* Light mode: Brushed warm aluminum console */
+  --background:        #e0e4ec;
+  --background-subtle: #d0d4dc;
+  --foreground:        #2d3748;
+  --foreground-muted:  #718096;
 
-  --card-bg:           #ffffff;
-  --card-border:       #e2e4e9;
+  --card-bg:           #e0e4ec;
+  --card-border:       rgba(255, 255, 255, 0.85);
 
-  --primary:           #0d9b7c;   /* teal, darker for light bg contrast */
+  --primary:           #0d9b7c;   /* teal */
   --primary-light:     #0fba95;
-  --primary-fg:        #ffffff;   /* text on primary button */
+  --primary-fg:        #ffffff;
 
-  --gold:              #c97c18;   /* amber, darker for light bg */
+  --gold:              #c97c18;
   --nav-active:        #0d9b7c;
-  --nav-inactive:      #6b7280;
+  --nav-inactive:      #718096;
 
-  --input-bg:          #ffffff;
-  --input-border:      #d1d5db;
+  --input-bg:          #d5dbe5;
+  --input-border:      rgba(0, 0, 0, 0.08);
 
-  --header-bg:         rgba(247, 248, 250, 0.85);
-  --glow:              rgba(13, 155, 124, 0.12);
+  --header-bg:         rgba(224, 228, 236, 0.9);
+  --glow:              rgba(13, 155, 124, 0.08);
+
+  /* Opacity-safe variables for Tailwind compatibility */
+  --primary-glow:          rgba(13, 155, 124, 0.15);
+  --border-primary-trans:  rgba(13, 155, 124, 0.3);
+
+  /* Skeuomorphic shadow variables */
+  --skeu-shadow-raised:       -6px -6px 14px rgba(255, 255, 255, 0.9), 6px 6px 14px rgba(163, 177, 198, 0.6), inset 1px 1px 0px rgba(255, 255, 255, 0.9), 1px 1px 3px rgba(0, 0, 0, 0.05);
+  --skeu-shadow-raised-hover: -8px -8px 16px rgba(255, 255, 255, 0.95), 8px 8px 16px rgba(163, 177, 198, 0.55);
+  --skeu-shadow-inset:        inset 4px 4px 8px rgba(163, 177, 198, 0.55), inset -4px -4px 8px rgba(255, 255, 255, 0.9);
 }
 
 .dark {
-  /* Dark mode palette — matches the design image exactly */
-  --background:        #171a1d;
-  --background-subtle: #1e2126;
-  --foreground:        #e8eaed;
-  --foreground-muted:  #8b949e;
+  /* Dark mode: Deep titanium control board */
+  --background:        #181a1f;
+  --background-subtle: #111216;
+  --foreground:        #e2e8f0;
+  --foreground-muted:  #94a3b8;
 
-  --card-bg:           #1e2126;
-  --card-border:       #2d3139;
+  --card-bg:           #181a1f;
+  --card-border:       rgba(255, 255, 255, 0.05);
 
-  --primary:           #50e3c2;   /* exact teal from image */
+  --primary:           #50e3c2;   /* console teal */
   --primary-light:     #6fecd0;
-  --primary-fg:        #0d1117;   /* dark text on teal button */
+  --primary-fg:        #0d1117;
 
-  --gold:              #f5a623;   /* amber from pipeline cards */
+  --gold:              #f5a623;
   --nav-active:        #50e3c2;
-  --nav-inactive:      #8b949e;
+  --nav-inactive:      #94a3b8;
 
-  --input-bg:          #1e2126;
-  --input-border:      #2d3139;
+  --input-bg:          #101216;
+  --input-border:      rgba(0, 0, 0, 0.2);
 
-  --header-bg:         rgba(23, 26, 29, 0.85);
+  --header-bg:         rgba(24, 26, 31, 0.9);
   --glow:              rgba(80, 227, 194, 0.06);
+
+  /* Opacity-safe variables for Tailwind compatibility */
+  --primary-glow:          rgba(80, 227, 194, 0.15);
+  --border-primary-trans:  rgba(80, 227, 194, 0.3);
+
+  /* Skeuomorphic shadow variables - Dark mode */
+  --skeu-shadow-raised:       -6px -6px 14px rgba(45, 52, 65, 0.25), 6px 6px 14px rgba(5, 6, 8, 0.8), inset 1px 1px 0px rgba(255, 255, 255, 0.05), 1px 1px 3px rgba(0, 0, 0, 0.4);
+  --skeu-shadow-raised-hover: -8px -8px 16px rgba(45, 52, 65, 0.25), 8px 8px 16px rgba(5, 6, 8, 0.8);
+  --skeu-shadow-inset:        inset 4px 4px 8px rgba(5, 6, 8, 0.85), inset -4px -4px 8px rgba(45, 52, 65, 0.2);
 }
 
 /* ===================== BASE RESET ===================== */
@@ -175,6 +193,139 @@
   /* ===================== ECHOMIND — PULSE DOT ===================== */
   .pulse-dot {
     animation: pulse-soft 2.2s ease-in-out infinite;
+  }
+
+  /* ===================== SKEUOMORPHIC UI CLASSES ===================== */
+  
+  /* Raised 3D Panel */
+  .skeu-raised {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    box-shadow: var(--skeu-shadow-raised);
+    border-radius: 14px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  /* Inset/Sunken Tray */
+  .skeu-inset {
+    background-color: var(--input-bg);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    box-shadow: var(--skeu-shadow-inset);
+    border-radius: 10px;
+  }
+
+  /* Sunken Text Area / Input */
+  .skeu-input {
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    box-shadow: var(--skeu-shadow-inset);
+    color: var(--foreground);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  
+  .skeu-input:focus {
+    border-color: var(--primary);
+    box-shadow: var(--skeu-shadow-inset), 0 0 8px var(--primary-glow);
+  }
+
+  /* Molded Push Button - Primary */
+  .skeu-btn-primary {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    box-shadow: var(--skeu-shadow-raised);
+    color: var(--foreground);
+    font-weight: 600;
+    border-radius: 10px;
+    transition: transform 0.1s, box-shadow 0.1s, background-color 0.2s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .skeu-btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.05) 100%);
+    pointer-events: none;
+  }
+
+  .skeu-btn-primary:hover {
+    background-color: var(--background-subtle);
+    transform: translateY(-1px);
+    box-shadow: var(--skeu-shadow-raised-hover);
+  }
+
+  .skeu-btn-primary:active {
+    transform: translateY(1px);
+    box-shadow: var(--skeu-shadow-inset);
+    background-color: var(--input-bg);
+  }
+
+  /* Molded Push Button - Secondary (Accent color) */
+  .skeu-btn-accent {
+    background-color: var(--primary);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: var(--skeu-shadow-raised);
+    color: var(--primary-fg);
+    font-weight: 600;
+    border-radius: 10px;
+    transition: transform 0.1s, box-shadow 0.1s, filter 0.2s;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .skeu-btn-accent::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.1) 100%);
+    border-radius: 10px;
+    pointer-events: none;
+  }
+
+  .skeu-btn-accent:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+    box-shadow: var(--skeu-shadow-raised-hover);
+  }
+
+  .skeu-btn-accent:active {
+    transform: translateY(1px);
+    box-shadow: inset 3px 3px 6px rgba(0,0,0,0.3), inset -3px -3px 6px rgba(255,255,255,0.1);
+  }
+
+  /* Retro CRT / Synthesizer Display Panel */
+  .skeu-display-panel {
+    background-color: #0b0c10;
+    border: 3px solid #2e303b;
+    box-shadow: 
+      inset 3px 3px 10px rgba(0,0,0,0.9),
+      2px 2px 5px rgba(255,255,255,0.05);
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .skeu-display-panel::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    z-index: 10;
+    background-size: 100% 4px, 6px 100%;
+    pointer-events: none;
+  }
+
+  /* Tactile Knob / Indicator Dot */
+  .skeu-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--primary);
+    background-color: var(--primary);
   }
 }
 

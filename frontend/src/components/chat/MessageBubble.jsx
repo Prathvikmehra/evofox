@@ -2,12 +2,12 @@ import React from 'react';
 
 export default function MessageBubble({ message, isOwn, isTyping = false }) {
   return (
-    <div className={`flex w-full ${isOwn ? 'justify-end' : 'justify-start'} mb-4`}>
+    <div className={`flex w-full ${isOwn ? 'justify-end' : 'justify-start'} mb-3`}>
       <div 
-        className={`max-w-[75%] px-4 py-2 rounded-2xl ${
+        className={`max-w-[70%] px-4 py-2.5 rounded-xl text-sm leading-relaxed ${
           isOwn 
-            ? 'bg-primary text-primary-foreground rounded-br-sm' 
-            : 'bg-muted/50 border shadow-sm rounded-bl-sm'
+            ? 'bg-[var(--primary)] text-[var(--primary-fg)] font-medium rounded-br-sm shadow-[2px_2px_6px_rgba(0,0,0,0.15),inset_1px_1px_0px_rgba(255,255,255,0.2)]' 
+            : 'skeu-inset rounded-bl-sm text-[var(--foreground)] border border-black/5 dark:border-white/5'
         }`}
       >
         {isTyping ? (
@@ -17,11 +17,11 @@ export default function MessageBubble({ message, isOwn, isTyping = false }) {
             <div className="w-2 h-2 rounded-full bg-current opacity-60 animate-bounce" style={{ animationDelay: '300ms' }} />
           </div>
         ) : (
-          <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.text}</p>
+          <p className="whitespace-pre-wrap">{message.text}</p>
         )}
         
         {!isTyping && message.timestamp && (
-          <div className={`text-[10px] mt-1 ${isOwn ? 'text-primary-foreground/70 text-right' : 'text-muted-foreground'}`}>
+          <div className={`text-[10px] mt-1 ${isOwn ? 'text-[var(--primary-fg)]/70 text-right' : 'text-[var(--foreground-muted)] text-right'}`}>
             {message.timestamp}
           </div>
         )}
