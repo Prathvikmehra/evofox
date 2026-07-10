@@ -1,5 +1,5 @@
-const { buildReplyPairs } = require("../../ai/parser/buildReplyPairs");
-const { buildStyleProfile } = require("../../ai/personality/buildStyleProfile");
+const { buildReplyPairs } = require("../../../ai/parser/buildReplyPairs");
+const { buildStyleProfile } = require("../../../ai/personality/buildStyleProfile");
 
 /**
  * POST /api/analyze

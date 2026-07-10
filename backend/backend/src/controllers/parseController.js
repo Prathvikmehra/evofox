@@ -1,5 +1,5 @@
-const { parseWhatsAppText } = require("../../ai/parser/parseWhatsAppText");
-const { cleanMessages } = require("../../ai/cleaner/cleanMessages");
+const { parseWhatsAppText } = require("../../../ai/parser/parseWhatsAppText");
+const { cleanMessages } = require("../../../ai/cleaner/cleanMessages");
 
 /**
  * POST /api/parse
