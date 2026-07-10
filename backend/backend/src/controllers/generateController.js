@@ -1,6 +1,4 @@
-const { findSimilarExamples } = require("../../../ai/retriever/findSimilarExamples");
-const { buildPrompt } = require("../../../ai/prompts/buildPrompt");
-const { callOllama } = require("../../../ai/response/callOllama");
+const { generateReply } = require("../../../ai/generate/generateReply");
 
 /**
  * POST /api/generate-reply
@@ -17,7 +15,7 @@ exports.handleGenerateReply = async (req, res, next) => {
   try {
     const { newMessage, pairs, styleProfile } = req.body;
 
-    // Input validation
+    // Input validation — unchanged from before
     if (!newMessage || typeof newMessage !== "string" || newMessage.trim().length === 0) {
       return res.status(400).json({ error: "newMessage is required" });
     }
@@ -28,10 +26,13 @@ exports.handleGenerateReply = async (req, res, next) => {
       return res.status(400).json({ error: "styleProfile object is required" });
     }
 
-    // Retrieve relevant examples, build prompt, call local model
-    const examples = findSimilarExamples(newMessage, pairs);
-    const prompt = buildPrompt(newMessage, styleProfile, examples);
-    const reply = await callOllama(prompt);
+    // Delegate the entire pipeline (example retrieval → prompt → Ollama) to
+    // the ai/ module rather than reimplementing the steps here.
+    const reply = await generateReply({
+      incomingMessage: newMessage,
+      styleProfile,
+      samplePairs: pairs,
+    });
 
     return res.status(200).json({ reply });
   } catch (err) {

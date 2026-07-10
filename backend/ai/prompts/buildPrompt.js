@@ -16,13 +16,13 @@
  */
 function buildPrompt(newMessage, styleProfile, examples) {
   const {
-    averageWordCount,
-    emojiUsagePercent,
-    topEmojis,
-    commonPhrases,
-    capitalizationStyle,
-    punctuationStyle,
-  } = styleProfile;
+    averageWordCount   = 0,
+    emojiUsagePercent  = 0,
+    topEmojis          = [],
+    commonPhrases      = [],
+    capitalizationStyle = "mixed",
+    punctuationStyle   = "standard",
+  } = styleProfile || {};
 
   // ── 1. Role framing ────────────────────────────────────────────────────
   const lines = [

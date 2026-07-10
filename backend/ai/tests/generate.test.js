@@ -44,7 +44,8 @@ test.describe("generateReply", () => {
     assert.equal(top5[4].incoming, "zero");
   });
 
-  test.it("caps length at exactly 5 pairs", async (t) => {
+  // findSimilarExamples defaults to topN=6, so 6 matching pairs → 6 examples.
+  test.it("caps length at topN=6 pairs", async (t) => {
     const buildPromptMock = t.mock.method(promptModule, "buildPrompt", () => "MOCKED_PROMPT");
     t.mock.method(ollamaModule, "callOllama", async () => "MOCKED_REPLY");
 
@@ -54,7 +55,8 @@ test.describe("generateReply", () => {
       { incoming: "apple 3", reply: "c" },
       { incoming: "apple 4", reply: "d" },
       { incoming: "apple 5", reply: "e" },
-      { incoming: "apple 6", reply: "f" }
+      { incoming: "apple 6", reply: "f" },
+      { incoming: "apple 7", reply: "g" } // 7 matching; only topN=6 should be selected
     ];
 
     await generateReply({
@@ -64,11 +66,13 @@ test.describe("generateReply", () => {
       myName: "Me"
     });
 
-    const top5 = buildPromptMock.mock.calls[0].arguments[2];
-    assert.equal(top5.length, 5);
+    const examples = buildPromptMock.mock.calls[0].arguments[2];
+    assert.equal(examples.length, 6);
   });
 
-  test.it("excludes zero-hit pairs if better matches exist", async (t) => {
+  // findSimilarExamples fills up to topN=6. To ensure zero-hit pairs are truly
+  // excluded (not used as fill-ins), we need at least 6 pairs with real overlap.
+  test.it("excludes zero-hit pairs if enough better matches exist to fill topN=6", async (t) => {
     const buildPromptMock = t.mock.method(promptModule, "buildPrompt", () => "MOCKED_PROMPT");
     t.mock.method(ollamaModule, "callOllama", async () => "MOCKED_REPLY");
 
@@ -80,6 +84,8 @@ test.describe("generateReply", () => {
       { incoming: "apple 3", reply: "c" },
       { incoming: "apple 4", reply: "d" },
       { incoming: "apple 5", reply: "e" },
+      { incoming: "apple 6", reply: "f" }, // 6 apple pairs → fills topN without needing zeros
+      { incoming: "apple 7", reply: "g" },
     ];
 
     await generateReply({
@@ -89,24 +95,27 @@ test.describe("generateReply", () => {
       myName: "Me"
     });
 
-    const top5 = buildPromptMock.mock.calls[0].arguments[2];
-    assert.equal(top5.length, 5);
-    
-    const hasZeroHit = top5.some(p => p.incoming.startsWith("zero"));
-    assert.equal(hasZeroHit, false, "0-hit pairs should not be in the top 5 when enough better matches exist");
+    const examples = buildPromptMock.mock.calls[0].arguments[2];
+    assert.equal(examples.length, 6);
+
+    const hasZeroHit = examples.some(p => p.incoming.startsWith("zero"));
+    assert.equal(hasZeroHit, false, "0-hit pairs should not appear when >= topN relevant pairs exist");
   });
 
-  test.it("fallback: if all have zero overlap, passes the first 5 in chronological order", async (t) => {
+  // findSimilarExamples fills gaps with a Fisher-Yates-shuffled slice, so when
+  // ALL pairs score zero the returned order is non-deterministic. We only assert
+  // that the correct count is returned and every entry comes from the input set.
+  test.it("fallback: if all have zero overlap, returns up to topN=6 pairs from the input set", async (t) => {
     const buildPromptMock = t.mock.method(promptModule, "buildPrompt", () => "MOCKED_PROMPT");
     t.mock.method(ollamaModule, "callOllama", async () => "MOCKED_REPLY");
 
     const samplePairs = [
-      { incoming: "one", reply: "a" },
-      { incoming: "two", reply: "b" },
+      { incoming: "one",   reply: "a" },
+      { incoming: "two",   reply: "b" },
       { incoming: "three", reply: "c" },
-      { incoming: "four", reply: "d" },
-      { incoming: "five", reply: "e" },
-      { incoming: "six", reply: "f" },
+      { incoming: "four",  reply: "d" },
+      { incoming: "five",  reply: "e" },
+      { incoming: "six",   reply: "f" },
       { incoming: "seven", reply: "g" },
     ];
 
@@ -117,15 +126,15 @@ test.describe("generateReply", () => {
       myName: "Me"
     });
 
-    const top5 = buildPromptMock.mock.calls[0].arguments[2];
-    assert.equal(top5.length, 5);
-    
-    // Stable sort should leave 0-scored elements in their original order.
-    assert.equal(top5[0].incoming, "one");
-    assert.equal(top5[1].incoming, "two");
-    assert.equal(top5[2].incoming, "three");
-    assert.equal(top5[3].incoming, "four");
-    assert.equal(top5[4].incoming, "five");
+    const examples = buildPromptMock.mock.calls[0].arguments[2];
+    // 7 pairs, topN=6 → exactly 6 returned
+    assert.equal(examples.length, 6);
+
+    // Every returned pair must be a member of the original input
+    const inputSet = new Set(samplePairs.map(p => p.incoming));
+    for (const ex of examples) {
+      assert.ok(inputSet.has(ex.incoming), `Unexpected pair in fallback: "${ex.incoming}"`);
+    }
   });
 
   test.it("handles fewer than 5 sample pairs", async (t) => {
