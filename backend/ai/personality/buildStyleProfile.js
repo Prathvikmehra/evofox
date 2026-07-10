@@ -13,9 +13,16 @@
  */
 
 // ── Emoji detection ────────────────────────────────────────────────────────
-// Unicode ranges that cover the vast majority of emoji characters
-const EMOJI_REGEX =
+// Unicode ranges that cover the vast majority of emoji characters.
+// EMOJI_REGEX_GLOBAL: used with matchAll() to enumerate individual emoji chars.
+// EMOJI_TEST_RE: no 'g' flag — safe to use with .test() inside .filter() because
+// a global regex's lastIndex carries over between .test() calls on different
+// strings, causing missed matches when the previous string's lastIndex is beyond
+// the length of the next string.
+const EMOJI_REGEX_GLOBAL =
   /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}\u{1F000}-\u{1FFFF}]/gu;
+const EMOJI_TEST_RE =
+  /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}\u{1F000}-\u{1FFFF}]/u;
 
 // ── Stopwords ──────────────────────────────────────────────────────────────
 const STOPWORDS = new Set([
@@ -29,11 +36,17 @@ const STOPWORDS = new Set([
   "oh", "ah", "im", "ive", "its", "dont", "cant", "wont", "isnt",
 ]);
 
+// ── Greeting word list ────────────────────────────────────────────────────────
+// Check ONLY the first word of each reply (case-insensitive).
+// "haha" is intentionally excluded — it belongs to bigram/trigram extraction.
+const GREETING_WORDS = new Set(["hi", "hey", "hello", "yo", "sup", "morning", "heyy"]);
+
 // ── Default profile returned on empty input ────────────────────────────────
 const EMPTY_PROFILE = {
   averageWordCount: 0,
   emojiUsagePercent: 0,
   topEmojis: [],
+  greetingPatterns: [],
   commonPhrases: [],
   capitalizationStyle: "mixed",
   punctuationStyle: "standard",
@@ -55,9 +68,9 @@ function buildStyleProfile(pairs) {
   const averageWordCount = parseFloat((totalWords / replies.length).toFixed(1));
 
   // ── emojiUsagePercent ───────────────────────────────────────────────────
-  const repliesWithEmoji = replies.filter((r) => EMOJI_REGEX.test(r));
-  // Reset lastIndex since the regex has global flag
-  EMOJI_REGEX.lastIndex = 0;
+  // Presence-ratio: (replies containing >=1 emoji) / total replies * 100.
+  // Uses EMOJI_TEST_RE (no 'g' flag) — safe to call .test() repeatedly in filter.
+  const repliesWithEmoji = replies.filter((r) => EMOJI_TEST_RE.test(r));
   const emojiUsagePercent = parseFloat(
     ((repliesWithEmoji.length / replies.length) * 100).toFixed(1)
   );
@@ -65,7 +78,7 @@ function buildStyleProfile(pairs) {
   // ── topEmojis ───────────────────────────────────────────────────────────
   const emojiFreq = {};
   for (const reply of replies) {
-    const matches = [...reply.matchAll(EMOJI_REGEX)];
+    const matches = [...reply.matchAll(EMOJI_REGEX_GLOBAL)];
     for (const [emoji] of matches) {
       emojiFreq[emoji] = (emojiFreq[emoji] || 0) + 1;
     }
@@ -74,6 +87,25 @@ function buildStyleProfile(pairs) {
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5)
     .map(([emoji]) => emoji);
+
+  // ── greetingPatterns ────────────────────────────────────────────────────
+  // First word of each reply only. Case-insensitive. Punctuation stripped.
+  // Returns top 5 by frequency.
+  const greetingFreq = {};
+  for (const reply of replies) {
+    const firstWord = reply
+      .trim()
+      .split(/\s+/)[0]
+      ?.toLowerCase()
+      .replace(/[^a-z]/g, "");
+    if (firstWord && GREETING_WORDS.has(firstWord)) {
+      greetingFreq[firstWord] = (greetingFreq[firstWord] || 0) + 1;
+    }
+  }
+  const greetingPatterns = Object.entries(greetingFreq)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([word]) => word);
 
   // ── commonPhrases (significant words) ───────────────────────────────────
   const wordFreq = {};
@@ -132,6 +164,7 @@ function buildStyleProfile(pairs) {
     averageWordCount,
     emojiUsagePercent,
     topEmojis,
+    greetingPatterns,
     commonPhrases,
     capitalizationStyle,
     punctuationStyle,
