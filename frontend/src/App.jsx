@@ -7,6 +7,7 @@ import Upload from './pages/Upload';
 import Dashboard from './pages/Dashboard';
 import Chat from './pages/Chat';
 import About from './pages/About';
+import Feedback from './pages/Feedback';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/select-sender" element={<Dashboard />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/about" element={<About />} />
+            <Route path="/feedback" element={<Feedback />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Layout>
