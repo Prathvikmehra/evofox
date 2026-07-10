@@ -1,3 +1,7 @@
+/**
+ * Central configuration — reads from environment variables with
+ * sensible defaults for local development.
+ */
 module.exports = {
   PORT: process.env.PORT || 3000,
   OLLAMA_URL: process.env.OLLAMA_URL || "http://localhost:11434",
