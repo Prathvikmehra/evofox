@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 const links = [
   { to: "/", label: "Home" },
   { to: "/upload", label: "Create Clone" },
+  { to: "/about", label: "About" },
 ];
 
 export default function NavBar() {

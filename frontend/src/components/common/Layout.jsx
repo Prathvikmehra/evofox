@@ -62,6 +62,15 @@ export default function Layout({ children }) {
             >
               Create Clone
             </Link>
+            <Link
+              to="/about"
+              className={`px-4 py-2 rounded-[20px] transition-all duration-300 ${isActive('/about')
+                  ? "bg-[var(--card-bg)] text-[var(--primary)] border border-[var(--card-border)] shadow-[0_2px_8px_rgba(0,0,0,0.02)] pointer-events-none"
+                  : "text-[var(--foreground-muted)] hover:text-[var(--foreground)] hover:translate-y-[-1px] active:translate-y-[0px]"
+                }`}
+            >
+              About
+            </Link>
 
             {/* Theme Toggle */}
             <button

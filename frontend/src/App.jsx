@@ -6,6 +6,7 @@ import Landing from './pages/Landing';
 import Upload from './pages/Upload';
 import Dashboard from './pages/Dashboard';
 import Chat from './pages/Chat';
+import About from './pages/About';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <Route path="/upload" element={<Upload />} />
             <Route path="/select-sender" element={<Dashboard />} />
             <Route path="/chat" element={<Chat />} />
+            <Route path="/about" element={<About />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Layout>
