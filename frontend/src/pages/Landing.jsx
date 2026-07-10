@@ -12,7 +12,7 @@ export default function Landing() {
     <div className="pb-24">
       {/* Hero Section */}
       <section className="max-w-4xl mx-auto px-6 pt-24 pb-16 text-center">
-        <p className="font-heading text-xs font-semibold uppercase tracking-[0.25em] text-[var(--primary)] mb-6 drop-shadow-sm">
+        <p className="font-heading text-xs font-semibold uppercase tracking-[0.25em] text-[var(--primary-text)] mb-6 drop-shadow-sm">
           A space for your memories and growth
         </p>
         <h1 className="echo-title text-5xl md:text-7xl text-[var(--foreground)] tracking-tight mb-8">
@@ -47,7 +47,7 @@ export default function Landing() {
             {steps.map((p) => (
               <div key={p.step} className="echo-card p-8 bg-[var(--surface)] flex flex-col justify-between min-h-[220px] hover:translate-y-[-4px] transition-all duration-300">
                 <div>
-                  <div className="font-heading text-xs font-bold text-[var(--primary)] mb-4 uppercase tracking-wider">
+                  <div className="font-heading text-xs font-bold text-[var(--primary-text)] mb-4 uppercase tracking-wider">
                     {p.num}
                   </div>
                   <h3 className="font-heading text-lg font-semibold text-[var(--foreground)] mb-3">{p.step}</h3>
@@ -89,7 +89,7 @@ export default function Landing() {
             </div>
             <div className="mt-6 pt-4 border-t border-[var(--card-border)] flex items-center justify-between text-[11px] text-[var(--foreground-muted)] font-heading">
               <span>78% grounded match</span>
-              <span className="text-[var(--primary)] font-bold">3 past replies found</span>
+              <span className="text-[var(--primary-text)] font-bold">3 past replies found</span>
             </div>
           </div>
         </div>

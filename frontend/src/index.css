@@ -10,6 +10,7 @@
   --color-primary: var(--primary);
   --color-primary-light: var(--primary-light);
   --color-primary-fg: var(--primary-fg);
+  --color-primary-text: var(--primary-text);
   --color-bg-base: var(--background);
   --color-surface: var(--surface);
   --color-card: var(--card-bg);
@@ -20,59 +21,70 @@
 
 :root {
   /* Light Theme - Calm, organic, Apple Health & Notion inspired */
-  --background:        #F8FBF8;
+  --background: #F8FBF8;
   --background-subtle: #EDF7EF;
-  --foreground:        #1E293B;
-  --foreground-muted:  #64748B;
-  --surface:           #FFFFFF;
-  
-  --card-bg:           #F3F8F3;
-  --card-border:       rgba(0, 0, 0, 0.04);
-  
-  --primary:           #00ED64;   /* MongoDB Green */
-  --primary-light:     #7EE787;   /* Accent Green */
-  --primary-fg:        #0B141A;   /* Dark text for contrast */
+  --foreground: #1E293B;
+  --foreground-muted: #64748B;
+  --surface: #FFFFFF;
 
-  --gradient-start:    #F8FBF8;
-  --gradient-mid:      #EDF7EF;
-  --gradient-end:      #E6F5EA;
+  --card-bg: #F3F8F3;
+  --card-border: rgba(0, 0, 0, 0.04);
 
-  --button-gradient:       linear-gradient(135deg, #00ED64, #25D366);
+  --primary: #00ED64;
+  /* MongoDB Green */
+  --primary-light: #7EE787;
+  /* Accent Green */
+  --primary-fg: #0B141A;
+  /* Dark text for contrast */
+  --primary-text: #008f3a;
+  /* High contrast green text for light bg */
+
+  --gradient-start: #F8FBF8;
+  --gradient-mid: #EDF7EF;
+  --gradient-end: #E6F5EA;
+
+  --button-gradient: linear-gradient(135deg, #00ED64, #25D366);
   --button-gradient-hover: linear-gradient(135deg, #12F77A, #3CE77C);
-  --button-shadow:         0 10px 24px rgba(37, 211, 102, 0.20);
-  --card-shadow:           0 12px 32px rgba(0, 0, 0, 0.02), 0 2px 8px rgba(0, 0, 0, 0.01), inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  --input-shadow:          inset 2px 2.5px 5px rgba(0, 0, 0, 0.03), inset -2px -2.5px 5px rgba(255, 255, 255, 0.9);
+  --button-shadow: 0 10px 24px rgba(37, 211, 102, 0.20);
+  --card-shadow: 0 12px 32px rgba(0, 0, 0, 0.02), 0 2px 8px rgba(0, 0, 0, 0.01), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --input-shadow: inset 2px 2.5px 5px rgba(0, 0, 0, 0.03), inset -2px -2.5px 5px rgba(255, 255, 255, 0.9);
 }
 
 .dark {
   /* Dark Theme - Warm, deep, WhatsApp and Spotify inspired */
-  --background:        #0B141A;
+  --background: #0B141A;
   --background-subtle: #111B21;
-  --foreground:        #F8FAFC;
-  --foreground-muted:  #94A3B8;
-  --surface:           #111B21;
+  --foreground: #F8FAFC;
+  --foreground-muted: #94A3B8;
+  --surface: #111B21;
 
-  --card-bg:           #1E2A30;
-  --card-border:       rgba(255, 255, 255, 0.06);
+  --card-bg: #1E2A30;
+  --card-border: rgba(255, 255, 255, 0.06);
 
-  --primary:           #25D366;   /* WhatsApp Green */
-  --primary-light:     #7EE787;   /* Accent Green */
-  --primary-fg:        #0B141A;
+  --primary: #25D366;
+  /* WhatsApp Green */
+  --primary-light: #7EE787;
+  /* Accent Green */
+  --primary-fg: #0B141A;
+  --primary-text:      #25D366;
 
-  --gradient-start:    #08120F;
-  --gradient-mid:      #0B141A;
-  --gradient-end:      #111B21;
+  --gradient-start: #08120F;
+  --gradient-mid: #0B141A;
+  --gradient-end: #111B21;
 
-  --button-gradient:       linear-gradient(135deg, #25D366, #1DB954);
+  --button-gradient: linear-gradient(135deg, #25D366, #1DB954);
   --button-gradient-hover: linear-gradient(135deg, #32E574, #20D060);
-  --button-shadow:         0 10px 24px rgba(37, 211, 102, 0.15);
-  --card-shadow:           0 16px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  --input-shadow:          inset 2px 2.5px 5px rgba(0, 0, 0, 0.3), inset -2px -2.5px 5px rgba(255, 255, 255, 0.02);
+  --button-shadow: 0 10px 24px rgba(37, 211, 102, 0.15);
+  --card-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --input-shadow: inset 2px 2.5px 5px rgba(0, 0, 0, 0.3), inset -2px -2.5px 5px rgba(255, 255, 255, 0.02);
 }
 
 /* ===================== BASE RESET ===================== */
 @layer base {
-  *, *::before, *::after {
+
+  *,
+  *::before,
+  *::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -96,8 +108,11 @@
   body::before {
     content: "";
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background-image: 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
       radial-gradient(circle at 50% 0%, var(--gradient-start) 0%, var(--gradient-mid) 50%, var(--gradient-end) 100%),
       url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.015'/%3E%3C/svg%3E");
     pointer-events: none;
@@ -107,19 +122,28 @@
 
 /* ===================== SCROLLBAR ===================== */
 @layer base {
-  ::-webkit-scrollbar { width: 8px; height: 8px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { 
-    background: var(--card-border); 
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--card-border);
     border-radius: 9999px;
   }
-  ::-webkit-scrollbar-thumb:hover { 
-    background: var(--foreground-muted); 
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--foreground-muted);
   }
 }
 
 /* ===================== CUSTOM COMPONENTS ===================== */
 @layer components {
+
   /* Premium Apple Widget Card Style */
   .echo-card {
     background-color: var(--card-bg);
