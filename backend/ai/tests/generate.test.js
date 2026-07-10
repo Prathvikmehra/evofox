@@ -8,60 +8,128 @@ const ollamaModule = require("../response/callOllama");
 const { generateReply } = require("../generate/generateReply");
 
 test.describe("generateReply", () => {
-  test.it("passes top 5 selected pairs to buildPrompt", async (t) => {
-    // Mock the dependencies
-    const buildPromptMock = t.mock.method(promptModule, "buildPrompt", (incoming, style, top5) => "MOCKED_PROMPT");
-    const callOllamaMock = t.mock.method(ollamaModule, "callOllama", async (prompt) => "MOCKED_REPLY");
+  
+  test.it("sorts pairs by keyword overlap descending and preserves chronological order on ties", async (t) => {
+    const buildPromptMock = t.mock.method(promptModule, "buildPrompt", () => "MOCKED_PROMPT");
+    t.mock.method(ollamaModule, "callOllama", async () => "MOCKED_REPLY");
 
     const samplePairs = [
-      { incoming: "zero overlap here", reply: "a" },
-      { incoming: "apples bananas", reply: "b" },
-      { incoming: "bananas cherries", reply: "c" }, // 2 hits
-      { incoming: "apples", reply: "d" }, // 1 hit
-      { incoming: "cherries", reply: "e" }, // 1 hit
-      { incoming: "dates", reply: "f" },
-      { incoming: "apples bananas cherries", reply: "g" }, // 3 hits
+      { incoming: "zero", reply: "a" },
+      { incoming: "apples bananas", reply: "b" }, // chronological #1, 2 hits
+      { incoming: "bananas cherries", reply: "c" }, // chronological #2, 2 hits
+      { incoming: "apples bananas cherries", reply: "d" }, // 3 hits (best)
+      { incoming: "apples", reply: "e" } // 1 hit
     ];
 
-    const incomingMessage = "I like apples and bananas and cherries";
-    const styleProfile = { averageWordCount: 10 };
-
-    const result = await generateReply({
-      incomingMessage,
-      styleProfile,
+    await generateReply({
+      incomingMessage: "apples and bananas and cherries",
+      styleProfile: {},
       samplePairs,
       myName: "Me"
     });
 
-    assert.equal(result, "MOCKED_REPLY");
-    assert.equal(buildPromptMock.mock.calls.length, 1);
-    assert.equal(callOllamaMock.mock.calls.length, 1);
-
-    const callArgs = buildPromptMock.mock.calls[0].arguments;
-    assert.equal(callArgs[0], incomingMessage);
-    assert.deepEqual(callArgs[1], styleProfile);
+    const top5 = buildPromptMock.mock.calls[0].arguments[2];
     
-    // Top 5 should be sorted by overlap descending:
+    // Exact expected order: 
     // 1. "apples bananas cherries" (3 hits)
-    // 2. "bananas cherries" (2 hits)
-    // 3. "apples bananas" (2 hits)
+    // 2. "apples bananas" (2 hits, chronological first)
+    // 3. "bananas cherries" (2 hits, chronological second)
     // 4. "apples" (1 hit)
-    // 5. "cherries" (1 hit)
-    // The exact tie-breaking order for the 2-hit and 1-hit depends on stable sort,
-    // but the set of 5 should not include "zero overlap here" or "dates" (0 hits).
-    const top5 = callArgs[2];
+    // 5. "zero" (0 hit, because there are only 5 total, it fills the remaining slot)
+    assert.equal(top5.length, 5);
+    assert.equal(top5[0].incoming, "apples bananas cherries");
+    assert.equal(top5[1].incoming, "apples bananas");
+    assert.equal(top5[2].incoming, "bananas cherries");
+    assert.equal(top5[3].incoming, "apples");
+    assert.equal(top5[4].incoming, "zero");
+  });
+
+  test.it("caps length at exactly 5 pairs", async (t) => {
+    const buildPromptMock = t.mock.method(promptModule, "buildPrompt", () => "MOCKED_PROMPT");
+    t.mock.method(ollamaModule, "callOllama", async () => "MOCKED_REPLY");
+
+    const samplePairs = [
+      { incoming: "apple 1", reply: "a" },
+      { incoming: "apple 2", reply: "b" },
+      { incoming: "apple 3", reply: "c" },
+      { incoming: "apple 4", reply: "d" },
+      { incoming: "apple 5", reply: "e" },
+      { incoming: "apple 6", reply: "f" }
+    ];
+
+    await generateReply({
+      incomingMessage: "apple",
+      styleProfile: {},
+      samplePairs,
+      myName: "Me"
+    });
+
+    const top5 = buildPromptMock.mock.calls[0].arguments[2];
+    assert.equal(top5.length, 5);
+  });
+
+  test.it("excludes zero-hit pairs if better matches exist", async (t) => {
+    const buildPromptMock = t.mock.method(promptModule, "buildPrompt", () => "MOCKED_PROMPT");
+    t.mock.method(ollamaModule, "callOllama", async () => "MOCKED_REPLY");
+
+    const samplePairs = [
+      { incoming: "apple 1", reply: "a" },
+      { incoming: "zero 1", reply: "z1" },
+      { incoming: "apple 2", reply: "b" },
+      { incoming: "zero 2", reply: "z2" },
+      { incoming: "apple 3", reply: "c" },
+      { incoming: "apple 4", reply: "d" },
+      { incoming: "apple 5", reply: "e" },
+    ];
+
+    await generateReply({
+      incomingMessage: "apple",
+      styleProfile: {},
+      samplePairs,
+      myName: "Me"
+    });
+
+    const top5 = buildPromptMock.mock.calls[0].arguments[2];
     assert.equal(top5.length, 5);
     
-    // Verify the best match is first
-    assert.equal(top5[0].incoming, "apples bananas cherries");
+    const hasZeroHit = top5.some(p => p.incoming.startsWith("zero"));
+    assert.equal(hasZeroHit, false, "0-hit pairs should not be in the top 5 when enough better matches exist");
+  });
 
-    // Verify 0-hit pairs are NOT in the top 5 (since we had 5 pairs with >0 hits)
-    const hasZeroHit = top5.some(p => p.incoming === "zero overlap here" || p.incoming === "dates");
-    assert.equal(hasZeroHit, false, "0-hit pairs should not be in the top 5 when better matches exist");
+  test.it("fallback: if all have zero overlap, passes the first 5 in chronological order", async (t) => {
+    const buildPromptMock = t.mock.method(promptModule, "buildPrompt", () => "MOCKED_PROMPT");
+    t.mock.method(ollamaModule, "callOllama", async () => "MOCKED_REPLY");
+
+    const samplePairs = [
+      { incoming: "one", reply: "a" },
+      { incoming: "two", reply: "b" },
+      { incoming: "three", reply: "c" },
+      { incoming: "four", reply: "d" },
+      { incoming: "five", reply: "e" },
+      { incoming: "six", reply: "f" },
+      { incoming: "seven", reply: "g" },
+    ];
+
+    await generateReply({
+      incomingMessage: "completely unrelated message",
+      styleProfile: {},
+      samplePairs,
+      myName: "Me"
+    });
+
+    const top5 = buildPromptMock.mock.calls[0].arguments[2];
+    assert.equal(top5.length, 5);
+    
+    // Stable sort should leave 0-scored elements in their original order.
+    assert.equal(top5[0].incoming, "one");
+    assert.equal(top5[1].incoming, "two");
+    assert.equal(top5[2].incoming, "three");
+    assert.equal(top5[3].incoming, "four");
+    assert.equal(top5[4].incoming, "five");
   });
 
   test.it("handles fewer than 5 sample pairs", async (t) => {
-    t.mock.method(promptModule, "buildPrompt", () => "MOCKED_PROMPT");
+    const buildPromptMock = t.mock.method(promptModule, "buildPrompt", () => "MOCKED_PROMPT");
     t.mock.method(ollamaModule, "callOllama", async () => "MOCKED_REPLY");
 
     const samplePairs = [
@@ -75,13 +143,13 @@ test.describe("generateReply", () => {
       myName: "Me"
     });
 
-    const callArgs = promptModule.buildPrompt.mock.calls[0].arguments;
-    assert.equal(callArgs[2].length, 1);
-    assert.equal(callArgs[2][0].incoming, "hello");
+    const top5 = buildPromptMock.mock.calls[0].arguments[2];
+    assert.equal(top5.length, 1);
+    assert.equal(top5[0].incoming, "hello");
   });
 
   test.it("handles empty or null samplePairs", async (t) => {
-    t.mock.method(promptModule, "buildPrompt", () => "MOCKED_PROMPT");
+    const buildPromptMock = t.mock.method(promptModule, "buildPrompt", () => "MOCKED_PROMPT");
     t.mock.method(ollamaModule, "callOllama", async () => "MOCKED_REPLY");
 
     await generateReply({
@@ -91,7 +159,7 @@ test.describe("generateReply", () => {
       myName: "Me"
     });
 
-    const callArgs = promptModule.buildPrompt.mock.calls[0].arguments;
-    assert.equal(callArgs[2].length, 0);
+    const top5 = buildPromptMock.mock.calls[0].arguments[2];
+    assert.equal(top5.length, 0);
   });
 });
