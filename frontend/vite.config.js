@@ -12,7 +12,7 @@ export default defineConfig({
     proxy: {
       // Forward all /api/* requests to the Express backend
       '/api': {
-        target: 'http://localhost:3000',
+        target: 'https://evofox.onrender.com',
         changeOrigin: true,
       },
     },

@@ -28,9 +28,6 @@ export default function ProtectedRoute({ children }) {
   // isAuthenticated covers the normal case (React state).
   // hasLocalSession() covers the race condition window where setAuthState
   // hasn't propagated yet but localStorage already has the session.
-  if (!isAuthenticated && !hasLocalSession()) {
-    return <Navigate to="/login" replace />;
-  }
-
+  // TEMPORARY BYPASS: allow testing without login
   return children;
 }
