@@ -26,13 +26,13 @@
 // Matches both date orderings and both clock formats.
 // Groups: (1) date  (2) time with optional AM/PM  (3) sender  (4) message text
 const MESSAGE_PATTERN =
-  /^(\d{1,2}\/\d{1,2}\/\d{2,4}),\s(\d{1,2}:\d{2}(?::\d{2})?(?:\s?[AP]M)?)\s[-\u202f]\s([^:]+?):\s(.*)$/;
+  /^(\d{1,2}\/\d{1,2}\/\d{2,4}),\s(\d{1,2}:\d{2}(?::\d{2})?(?:[\s\u202F]?[AP]M)?)\s[-\u202F]\s([^:]+?):\s(.*)$/i;
 
 // Matches timestamp prefix + " - " but captures everything after as plain text
 // (no colon-delimited sender segment). Used to detect system notifications.
 // Groups: (1) date  (2) time  (3) full text after " - "
 const SYSTEM_PATTERN =
-  /^(\d{1,2}\/\d{1,2}\/\d{2,4}),\s(\d{1,2}:\d{2}(?::\d{2})?(?:\s?[AP]M)?)\s[-\u202f]\s(.+)$/;
+  /^(\d{1,2}\/\d{1,2}\/\d{2,4}),\s(\d{1,2}:\d{2}(?::\d{2})?(?:[\s\u202F]?[AP]M)?)\s[-\u202F]\s(.+)$/i;
 
 function parseWhatsAppText(rawText) {
   // Guard: non-string or empty input → return empty array, never throw
