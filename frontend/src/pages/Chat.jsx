@@ -82,16 +82,20 @@ export default function Chat() {
     setError(null);
 
     try {
-      // Mock delay
-      await new Promise(r => setTimeout(r, 2000));
-      const mockReply = `This is a mock reply from ${targetSender}. fr ${styleProfile?.topEmojis?.[0] ?? '😂'}`;
+      const res = await fetch('/api/generate-reply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ newMessage: userMsg.text, pairs, styleProfile }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || `Server error ${res.status}`);
       setMessages(prev => [...prev, {
-        text: mockReply,
+        text: data.reply,
         isOwn: false,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       }]);
     } catch (err) {
-      setError('Clone offline. Make sure backend and Ollama are running.');
+      setError(err.message || 'Clone offline. Make sure backend and Ollama are running.');
     } finally {
       setIsTyping(false);
     }

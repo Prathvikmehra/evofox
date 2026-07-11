@@ -23,16 +23,33 @@
  * @returns {Array<{ timestamp: string, sender: string, text: string }>}
  */
 
-// Matches both date orderings and both clock formats.
-// Groups: (1) date  (2) time with optional AM/PM  (3) sender  (4) message text
-const MESSAGE_PATTERN =
-  /^(\d{1,2}\/\d{1,2}\/\d{2,4}),\s(\d{1,2}:\d{2}(?::\d{2})?(?:[\s\u202F]?[AP]M)?)\s[-\u202F]\s([^:]+?):\s(.*)$/i;
+// \u202F = narrow no-break space (used by WhatsApp between time digits and AM/PM)
+// \u200E = left-to-right mark (sometimes prepended to lines in certain exports)
+// WS    = any combination of regular space, \u202F, \u200E
+const WS = "[\\s\u202F\u200E]*";
 
-// Matches timestamp prefix + " - " but captures everything after as plain text
-// (no colon-delimited sender segment). Used to detect system notifications.
-// Groups: (1) date  (2) time  (3) full text after " - "
-const SYSTEM_PATTERN =
-  /^(\d{1,2}\/\d{1,2}\/\d{2,4}),\s(\d{1,2}:\d{2}(?::\d{2})?(?:[\s\u202F]?[AP]M)?)\s[-\u202F]\s(.+)$/i;
+// Matches both date orderings and both clock formats, plus square-bracket format.
+// Handles: "DD/MM/YYYY, HH:MM AM - " and "[DD/MM/YYYY, HH:MM] - "
+// Groups: (1) date  (2) time with optional AM/PM  (3) sender  (4) message text
+const MESSAGE_PATTERN = new RegExp(
+  `^[\u200E\u202F\\s]*` +                         // optional leading LRM/whitespace
+  `[\\["]?(\\d{1,2}\\/\\d{1,2}\\/\\d{2,4})[\\]"]?,${WS}` + // (1) date
+  `(\\d{1,2}:\\d{2}(?::\\d{2})?(?:${WS}[AP]M)?)[\\]"]?` +  // (2) time
+  `${WS}[-\u2013\u2014]${WS}` +                  // separator dash (-, –, —)
+  `([^:]+?):\\s(.*)$`,                            // (3) sender  (4) text
+  "i"
+);
+
+// Same but no "Sender: " segment — catches system/notification lines.
+// Groups: (1) date  (2) time  (3) full text after separator
+const SYSTEM_PATTERN = new RegExp(
+  `^[\u200E\u202F\\s]*` +
+  `[\\["]?(\\d{1,2}\\/\\d{1,2}\\/\\d{2,4})[\\]"]?,${WS}` +
+  `(\\d{1,2}:\\d{2}(?::\\d{2})?(?:${WS}[AP]M)?)[\\]"]?` +
+  `${WS}[-\u2013\u2014]${WS}` +
+  `(.+)$`,
+  "i"
+);
 
 function parseWhatsAppText(rawText) {
   // Guard: non-string or empty input → return empty array, never throw

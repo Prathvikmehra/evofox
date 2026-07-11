@@ -65,13 +65,14 @@ export default function Upload() {
     setError(null);
 
     try {
-      // Mock delay — replace with real fetch when backend is ready
-      await new Promise(r => setTimeout(r, 1500));
-      const mockData = {
-        messages: [{ text: rawText, sender: 'Alex' }],
-        senders: ['Alex', 'Jordan', 'Sam'],
-      };
-      navigate('/select-sender', { state: { messages: mockData.messages, senders: mockData.senders, rawText } });
+      const res = await fetch('/api/parse', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rawText }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || `Server error ${res.status}`);
+      navigate('/select-sender', { state: { messages: data.messages, senders: data.senders, rawText } });
     } catch (err) {
       setError(err.message || 'Network error. Make sure the backend is running on port 3000.');
     } finally {

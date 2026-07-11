@@ -45,20 +45,14 @@ export default function Dashboard() {
     setError(null);
 
     try {
-      // Mock — replace with real fetch
-      await new Promise(r => setTimeout(r, 1500));
-      const mockData = {
-        pairs: [],
-        styleProfile: {
-          averageWordCount: 8.5,
-          emojiUsagePercent: 65,
-          topEmojis: ['😂', '🔥', '💯'],
-          commonPhrases: ['fr', 'literally', 'no way'],
-          capitalizationStyle: 'lowercase',
-          punctuationStyle: 'minimal',
-        },
-      };
-      navigate('/chat', { state: { pairs: mockData.pairs, styleProfile: mockData.styleProfile, targetSender: sender } });
+      const res = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages, targetSender: sender }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || `Server error ${res.status}`);
+      navigate('/chat', { state: { pairs: data.pairs, styleProfile: data.styleProfile, targetSender: sender } });
     } catch (err) {
       setError(err.message || 'Failed to analyze. Make sure the backend is running.');
       setSelectedSender(null);
