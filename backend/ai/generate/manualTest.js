@@ -10,16 +10,16 @@ const { generateReply } = require("./generateReply");
  */
 async function run() {
   const samplePairs = [
-    { incoming: "hey are we still on for tonight?", reply: "yes! around 8?" },
-    { incoming: "can you bring some chips?", reply: "sure thing. what kind?" },
-    { incoming: "did you see the game?", reply: "no i missed it, was it good?" },
-    { incoming: "i am so tired today", reply: "same here, long week." },
-    { incoming: "what time is the meeting?", reply: "i think 2pm" },
-    { incoming: "lunch tomorrow?", reply: "sounds good to me" },
-    { incoming: "do you have the presentation?", reply: "sending it now" },
-    { incoming: "can we reschedule?", reply: "no worries, when works for you?" },
-    { incoming: "happy birthday!!", reply: "thank you!!" },
-    { incoming: "see you soon", reply: "see ya" },
+    { incoming: "kaha hai bhai?", reply: "bas raste me hu, 10 min me pohoch raha" },
+    { incoming: "aaj plan kya hai?", reply: "kuch nahi bhai, tu bata" },
+    { incoming: "chal game khelte hai", reply: "aaja, valorant open kar" },
+    { incoming: "bhookh lag rahi hai yaar", reply: "zomato se order karle kuch" },
+    { incoming: "kal chutti hai kya?", reply: "haa shayad" },
+    { incoming: "jaldi aao bhai", reply: "aa raha hu shant reh" },
+    { incoming: "call kar free hoke", reply: "ok bhai" },
+    { incoming: "kaisa gaya exam?", reply: "bekar bhai pucho mat" },
+    { incoming: "happy birthday!!", reply: "thank you bhai!!" },
+    { incoming: "milte hai shaam ko", reply: "done" },
   ];
 
   const styleProfile = {
@@ -31,7 +31,7 @@ async function run() {
     punctuationStyle: "minimal",
   };
 
-  const incomingMessage = "hey do you want to grab lunch and talk about the presentation?";
+  const incomingMessage = "bhai pubg khelega raat ko?";
 
   console.log("--- Generating Reply ---");
   console.log("Incoming Message:", incomingMessage);
