@@ -140,6 +140,115 @@ export default function Landing() {
           </div>
         </div>
       </section>
+      {/* Features Grid */}
+      <section className="py-24 border-t border-[var(--card-border)] bg-[var(--background)]">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="echo-title text-3xl md:text-5xl text-[var(--foreground)] mb-6">Built for authenticity.</h2>
+            <p className="text-[var(--foreground-muted)] text-base md:text-lg max-w-2xl mx-auto font-sans leading-relaxed">
+              EchoMind doesn't just parrot words back to you. It creates a deep statistical profile of your communication habits to generate replies that feel genuinely yours.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Feature 1 */}
+            <div className="echo-card p-8 bg-[var(--surface)] hover:-translate-y-1 transition-transform duration-300">
+              <div className="w-12 h-12 rounded-2xl bg-[var(--background-subtle)] border border-[var(--card-border)] flex items-center justify-center mb-6 text-[var(--primary)]">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+              </div>
+              <h3 className="font-heading font-semibold text-xl text-[var(--foreground)] mb-3">Tone Matching</h3>
+              <p className="text-[14px] text-[var(--foreground-muted)] font-sans leading-relaxed">
+                Whether you use full punctuation, all lowercase, or excessive emojis, EchoMind mathematically maps your exact stylistic quirks.
+              </p>
+            </div>
+            {/* Feature 2 */}
+            <div className="echo-card p-8 bg-[var(--surface)] hover:-translate-y-1 transition-transform duration-300">
+              <div className="w-12 h-12 rounded-2xl bg-[var(--background-subtle)] border border-[var(--card-border)] flex items-center justify-center mb-6 text-[var(--primary)]">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+              </div>
+              <h3 className="font-heading font-semibold text-xl text-[var(--foreground)] mb-3">Local Privacy</h3>
+              <p className="text-[14px] text-[var(--foreground-muted)] font-sans leading-relaxed">
+                Powered by a local Llama 3.2 model. Your deeply personal chat logs are processed securely and never used to train global AI models.
+              </p>
+            </div>
+            {/* Feature 3 */}
+            <div className="echo-card p-8 bg-[var(--surface)] hover:-translate-y-1 transition-transform duration-300">
+              <div className="w-12 h-12 rounded-2xl bg-[var(--background-subtle)] border border-[var(--card-border)] flex items-center justify-center mb-6 text-[var(--primary)]">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+              </div>
+              <h3 className="font-heading font-semibold text-xl text-[var(--foreground)] mb-3">Lightning Fast</h3>
+              <p className="text-[14px] text-[var(--foreground-muted)] font-sans leading-relaxed">
+                Using highly optimized local inference and smart memory retrieval, EchoMind responds to you in milliseconds, exactly like a real chat app.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Deep Dive Section */}
+      <section className="py-24 border-t border-[var(--card-border)] bg-[var(--background-subtle)]">
+        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
+          <div className="order-2 md:order-1 relative">
+            <div className="absolute inset-0 bg-gradient-to-tr from-[var(--primary)]/10 to-transparent rounded-3xl blur-3xl"></div>
+            <div className="echo-card bg-[var(--surface)] border border-[var(--card-border)] rounded-3xl p-8 relative overflow-hidden">
+              {/* Fake Terminal / Code window */}
+              <div className="flex gap-2 mb-6 border-b border-[var(--card-border)] pb-4">
+                <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
+                <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
+              </div>
+              <pre className="font-mono text-[11px] md:text-[13px] text-[var(--foreground-muted)] overflow-x-auto">
+                <code>
+<span className="text-[var(--primary)]">const</span> cloneProfile = {'{\n'}
+{'  '}name: <span className="text-blue-400">"Alex"</span>,\n
+{'  '}style: {'{\n'}
+{'    '}avgWords: <span className="text-orange-400">5.2</span>,\n
+{'    '}capitalization: <span className="text-blue-400">"all_lowercase"</span>,\n
+{'    '}punctuation: <span className="text-blue-400">"minimal"</span>,\n
+{'    '}emojiUsage: <span className="text-orange-400">12%</span>,\n
+{'    '}topPhrases: [<span className="text-blue-400">"bro"</span>, <span className="text-blue-400">"lmao"</span>, <span className="text-blue-400">"fr"</span>]\n
+{'  }\n}'}
+                </code>
+              </pre>
+            </div>
+          </div>
+          <div className="order-1 md:order-2">
+            <p className="font-heading text-xs font-semibold uppercase tracking-[0.2em] text-[var(--primary)] mb-4">Under the hood</p>
+            <h2 className="echo-title text-3xl md:text-4xl text-[var(--foreground)] mb-6">
+              More than just a prompt.
+            </h2>
+            <p className="text-[var(--foreground-muted)] leading-relaxed text-base font-sans mb-6">
+              EchoMind uses a specialized two-step architecture. First, it acts as a data scientist—cleaning, analyzing, and structuring your raw WhatsApp exports to build a mathematical style profile.
+            </p>
+            <p className="text-[var(--foreground-muted)] leading-relaxed text-base font-sans">
+              Then, using Retrieval-Augmented Generation (RAG), it searches through your history to find exactly how you handled similar conversational contexts in the past, feeding this strictly into a tuned LLM prompt. The result? A clone that actually sounds like you.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Bottom Section */}
+      <section className="py-32 border-t border-[var(--card-border)] relative overflow-hidden">
+        <div className="absolute inset-0 bg-[var(--primary)]/5"></div>
+        <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
+          <h2 className="echo-title text-4xl md:text-6xl text-[var(--foreground)] mb-8">
+            Ready to meet yourself?
+          </h2>
+          <p className="text-[var(--foreground-muted)] text-lg md:text-xl font-sans mb-12 max-w-2xl mx-auto">
+            Upload your first chat export in seconds and start conversing with your digital twin today. It's completely free to try.
+          </p>
+          <Link
+            to="/upload"
+            className="inline-block px-10 py-5 rounded-2xl font-heading font-bold text-base transition-all hover:scale-[1.03] active:scale-[0.98]"
+            style={{
+              background: "linear-gradient(135deg, var(--primary), var(--primary-light))",
+              color: "var(--primary-fg)",
+              boxShadow: "0 8px 30px rgba(37,211,102,0.35)",
+            }}
+          >
+            Create Your Clone Now
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }

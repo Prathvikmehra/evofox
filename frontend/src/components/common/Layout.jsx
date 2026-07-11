@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { useAuth0 } from '@auth0/auth0-react';
+import Footer from './Footer';
 
 function SunIcon() {
   return (
@@ -262,6 +263,8 @@ export default function Layout({ children }) {
       <main className="flex-1 flex flex-col">
         {children}
       </main>
+      
+      <Footer />
     </div>
   );
 }
