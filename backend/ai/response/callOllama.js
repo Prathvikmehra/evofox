@@ -27,14 +27,17 @@ async function callOllama(prompt) {
   try {
     response = await fetch(`${config.OLLAMA_URL}/api/generate`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "true"
+      },
       body: JSON.stringify({
         model: config.OLLAMA_MODEL,
         prompt,
         stream: false,
         options: {
-          temperature: 0.8,
-          num_predict: 60,
+          temperature: 0.6,
+          num_predict: 100,
         },
       }),
       signal: controller.signal,
@@ -72,7 +75,6 @@ async function callOllama(prompt) {
   if (!data || typeof data.response !== "string") {
     const err = new Error("Local model returned an unexpected response shape");
     err.status = 502;
-    throw err;
   }
 
   // Trim whitespace and strip any wrapping quotation marks the model may add
