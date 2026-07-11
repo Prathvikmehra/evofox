@@ -36,7 +36,7 @@ async function callOllama(prompt) {
         prompt,
         stream: false,
         options: {
-          temperature: 0.6,
+          temperature: 0.7,
           num_predict: 100,
         },
       }),
