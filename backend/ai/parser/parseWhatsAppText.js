@@ -29,13 +29,13 @@
 const WS = "[\\s\u202F\u200E]*";
 
 // Matches both date orderings and both clock formats, plus square-bracket format.
-// Handles: "DD/MM/YYYY, HH:MM AM - " and "[DD/MM/YYYY, HH:MM] - "
+// Handles: "DD/MM/YYYY, HH:MM AM - " and "[DD/MM/YYYY, HH:MM] - " and "[DD/MM/YYYY, HH:MM] " (iOS)
 // Groups: (1) date  (2) time with optional AM/PM  (3) sender  (4) message text
 const MESSAGE_PATTERN = new RegExp(
   `^[\u200E\u202F\\s]*` +                         // optional leading LRM/whitespace
-  `[\\["]?(\\d{1,2}\\/\\d{1,2}\\/\\d{2,4})[\\]"]?,${WS}` + // (1) date
+  `[\\["]?(\\d{1,2}\\/\\d{1,2}\\/\\d{2,4})[\\]"]?,?${WS}` + // (1) date
   `(\\d{1,2}:\\d{2}(?::\\d{2})?(?:${WS}[AP]M)?)[\\]"]?` +  // (2) time
-  `${WS}[-\u2013\u2014]${WS}` +                  // separator dash (-, –, —)
+  `(?:${WS}[-\u2013\u2014])?${WS}` +             // optional separator dash (-, –, —)
   `([^:]+?):\\s(.*)$`,                            // (3) sender  (4) text
   "i"
 );
@@ -44,9 +44,9 @@ const MESSAGE_PATTERN = new RegExp(
 // Groups: (1) date  (2) time  (3) full text after separator
 const SYSTEM_PATTERN = new RegExp(
   `^[\u200E\u202F\\s]*` +
-  `[\\["]?(\\d{1,2}\\/\\d{1,2}\\/\\d{2,4})[\\]"]?,${WS}` +
+  `[\\["]?(\\d{1,2}\\/\\d{1,2}\\/\\d{2,4})[\\]"]?,?${WS}` +
   `(\\d{1,2}:\\d{2}(?::\\d{2})?(?:${WS}[AP]M)?)[\\]"]?` +
-  `${WS}[-\u2013\u2014]${WS}` +
+  `(?:${WS}[-\u2013\u2014])?${WS}` +
   `(.+)$`,
   "i"
 );
