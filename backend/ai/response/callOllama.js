@@ -17,7 +17,7 @@
 
 const config = require("../../backend/src/config");
 
-const TIMEOUT_MS = 20_000; // 20 seconds
+const TIMEOUT_MS = 60_000; // 60 seconds (increased from 20s to prevent local timeouts)
 
 async function callOllama(prompt) {
   const controller = new AbortController();
@@ -44,11 +44,11 @@ async function callOllama(prompt) {
     });
   } catch (fetchErr) {
     // Connection refused, network error, or AbortError (timeout)
-    const isTimeout =
-      fetchErr.name === "AbortError" || fetchErr.code === "ECONNREFUSED";
-    const err = new Error(
-      "Local model unavailable — is Ollama running?"
-    );
+    const isTimeout = fetchErr.name === "AbortError" || fetchErr.code === "ECONNREFUSED";
+    const errMessage = fetchErr.name === "AbortError" 
+      ? "Local model timed out (took longer than 60s). Is your machine overloaded?"
+      : "Local model unavailable — is Ollama running?";
+    const err = new Error(errMessage);
     err.status = 503;
     throw err;
   } finally {
