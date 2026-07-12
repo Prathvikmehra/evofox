@@ -14,17 +14,51 @@
  * Ollama endpoint: POST /api/embeddings  { model, prompt } -> { embedding }
  */
 
-const config = require("../../backend/src/config");
+const config = require("../../src/config");
+const fs = require("fs/promises");
+const path = require("path");
 
 const EMBED_TIMEOUT_MS = 20_000;
 
+// Process-lifetime cache: text -> vector. 
+// We now persist this to disk so server restarts don't lose embeddings!
+const _cache = new Map();
+const _CACHE_MAX = 5000;
+const CACHE_FILE = path.join(__dirname, "cache.json");
+
+let cacheLoaded = false;
+
+async function loadCache() {
+  if (cacheLoaded) return;
+  try {
+    const data = await fs.readFile(CACHE_FILE, "utf-8");
+    const parsed = JSON.parse(data);
+    for (const [k, v] of Object.entries(parsed)) {
+      _cache.set(k, v);
+    }
+  } catch (err) {
+    // Ignore if file doesn't exist or is invalid
+  }
+  cacheLoaded = true;
+}
+
+// Fire-and-forget save
+function saveCache() {
+  const obj = Object.fromEntries(_cache);
+  fs.writeFile(CACHE_FILE, JSON.stringify(obj)).catch(() => {});
+}
+
 /**
  * Embed a single string. Returns a number[] on success, or null on any failure.
+ * Results are memoised by exact text.
  * @param {string} text
  * @returns {Promise<number[]|null>}
  */
 async function embedText(text) {
   if (!text || typeof text !== "string" || text.trim().length === 0) return null;
+
+  await loadCache();
+  if (_cache.has(text)) return _cache.get(text);
 
   // Guard against pathologically long inputs blowing up the embedder's context.
   const safeText = text.length > 2000 ? text.slice(0, 2000) : text;
@@ -54,6 +88,10 @@ async function embedText(text) {
     if (!Array.isArray(vec) || vec.length === 0 || !vec.every(Number.isFinite)) {
       return null;
     }
+    // Memoise (simple FIFO eviction when the cache is full).
+    if (_cache.size >= _CACHE_MAX) _cache.delete(_cache.keys().next().value);
+    _cache.set(text, vec);
+    saveCache(); // Persist to disk
     return vec;
   } catch {
     // ECONNREFUSED, AbortError (timeout), JSON parse error — all degrade to null.
