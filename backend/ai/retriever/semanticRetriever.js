@@ -6,14 +6,17 @@
  * then applies MMR (Maximal Marginal Relevance) so the chosen examples are both
  * relevant AND diverse — no feeding the model six near-identical messages.
  *
- * It is deliberately SYNCHRONOUS: the caller embeds the incoming message once
- * (async) and passes the vector in here. That keeps all the ranking math pure
- * and unit-testable with zero network/Ollama dependency.
+ * It is deliberately SYNCHRONOUS: the caller embeds the incoming message (and
+ * the history) once and passes the vectors in. That keeps all the ranking math
+ * pure and unit-testable with zero network/Ollama dependency.
  *
  * Graceful degradation: if there is no query embedding, or none of the pairs
  * carry embeddings, it transparently falls back to the original lexical
  * retriever (findSimilarExamples) — so the app still works with the embed model
  * uninstalled, just less accurately.
+ *
+ * Consumed by generate/generateReply.js, which attaches `embedding` to each
+ * pair before calling selectExamples(incomingMessage, pairs, queryEmbedding).
  */
 
 const config = require("../../backend/src/config");

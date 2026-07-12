@@ -75,6 +75,7 @@ async function callOllama(prompt) {
   if (!data || typeof data.response !== "string") {
     const err = new Error("Local model returned an unexpected response shape");
     err.status = 502;
+    throw err;
   }
 
   // Trim whitespace and strip any wrapping quotation marks the model may add
