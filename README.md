@@ -33,7 +33,7 @@ EchoMind is a **decoupled full-stack app**: a **Vite + React** frontend and an *
 
 The backend is split into a pure-logic `ai/` layer (parsing, cleaning, style profiling, retrieval, prompt building, and the Ollama call) sitting behind a thin `controllers/routes` HTTP layer — so the actual "AI" is unit-testable without spinning up Express at all. The frontend is a small, focused flow: paste → pick a sender → chat, with a style-profile card as the proof-of-learning centerpiece.
 
-There is deliberately **no database and no embeddings** — retrieval is done with keyword-overlap scoring in plain JS, which is fast, dependency-free, and easy to reason about at chat-history scale.
+There is deliberately **no vector database and no cloud** — semantic retrieval runs on embeddings from your **local Ollama** (`nomic-embed-text`), held **in memory** and searched with plain-JS cosine similarity. Relevance is a **hybrid** of semantic similarity and keyword overlap, and the final few-shot set is diversified with **MMR (Maximal Marginal Relevance)** so the model never sees six near-identical examples. If the embed model isn't installed, retrieval degrades gracefully to keyword overlap — so the app still runs with zero setup.
 
 ---
 
@@ -52,8 +52,8 @@ There is deliberately **no database and no embeddings** — retrieval is done wi
 | Technology | Category | Purpose |
 | :--- | :--- | :--- |
 | **Node.js + Express** | Web Server | Minimal, fast HTTP layer for 3 endpoints |
-| **Ollama (local)** | LLM Inference | `llama3.2:3b` by default — the only network call in the whole backend |
-| **Plain JS keyword overlap** | Retrieval | Few-shot example selection, zero dependencies |
+| **Ollama (local)** | LLM Inference | `llama3.2:3b` (chat) + `nomic-embed-text` (retrieval) — the only network calls, both to localhost |
+| **Hybrid semantic + keyword retrieval** | Retrieval | Cosine similarity on local embeddings, blended with keyword overlap, diversified via MMR — no vector DB, no cloud |
 | **In-memory state** | Storage | No DB — frontend passes parsed data back on each call |
 | **`node:test`** | Testing | Native test runner, no extra dependencies |
 
@@ -64,7 +64,7 @@ There is deliberately **no database and no embeddings** — retrieval is done wi
 - **🧾 WhatsApp Export Parsing** — handles 12h/24h clocks, both date orders, multi-line messages, and structurally tags system lines (joins/leaves, encryption banners) so they're never confused with real text.
 - **🧹 Noise Cleaning** — strips media placeholders, missed calls, deleted messages — without false-positive matching on ordinary words like "left" or "added".
 - **🧠 Style Profiling** — quantifies one sender's real voice: average word count, emoji usage (presence-ratio, not raw count), top emojis, common phrases, capitalization and punctuation style.
-- **🔍 Keyword-Overlap Retriever** — pulls the most relevant real (incoming → reply) examples as few-shot context, with a random-fill fallback so the model always has *something* to anchor on.
+- **🔍 Hybrid Semantic Retriever** — embeds messages with a local Ollama model and pulls the most relevant real (incoming → reply) examples by cosine similarity blended with keyword overlap, then applies **MMR** to keep the few-shot set diverse. Degrades to pure keyword overlap if the embed model isn't installed.
 - **🤖 Local-Only Generation** — one prompt, one call to a local Ollama instance, a 20-second hard timeout so a hung model never freezes the demo.
 - **🎨 Style Profile Card** — a visual, at-a-glance proof that the app actually learned something, shown right inside the chat flow.
 
@@ -250,8 +250,11 @@ cd evofox
 ### 2. Pull and Warm Up the Model
 ```bash
 ollama pull llama3.2:3b
+ollama pull nomic-embed-text   # embeddings for semantic retrieval (~275MB)
 ollama run llama3.2:3b   # confirm it responds, then leave Ollama running
 ```
+
+> The embed model is optional but recommended — without it, retrieval automatically falls back to keyword overlap. To benchmark the difference, run `node ai/eval/evalStyle.js` from `backend/`.
 
 ### 3. Backend
 ```bash
@@ -266,6 +269,9 @@ Runs on `http://localhost:3000` by default:
 | `PORT` | `3000` |
 | `OLLAMA_URL` | `http://localhost:11434` |
 | `OLLAMA_MODEL` | `llama3.2:3b` |
+| `OLLAMA_EMBED_MODEL` | `nomic-embed-text` |
+| `RETRIEVAL_ALPHA` | `0.7` (semantic vs keyword weight) |
+| `RETRIEVAL_MMR_LAMBDA` | `0.7` (relevance vs diversity) |
 
 ### 4. Frontend
 ```bash

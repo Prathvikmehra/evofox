@@ -5,7 +5,8 @@
   "main": "backend/src/app.js",
   "scripts": {
     "start": "node backend/src/app.js",
-    "dev": "node --watch backend/src/app.js"
+    "dev": "node --watch backend/src/app.js",
+    "test": "node --test ai/tests/*.test.js"
   },
   "keywords": [],
   "author": "",

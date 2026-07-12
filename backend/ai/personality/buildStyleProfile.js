@@ -41,6 +41,9 @@ const STOPWORDS = new Set([
 // "haha" is intentionally excluded — it belongs to bigram/trigram extraction.
 const GREETING_WORDS = new Set(["hi", "hey", "hello", "yo", "sup", "morning", "heyy"]);
 
+// ── Filler vocabulary ────────────────────────────────────────────────────────
+const FILLER_VOCAB = new Set(["tbh", "ngl", "lol", "lmao", "fr", "rn", "btw", "idk", "idc", "smh", "af", "fyi", "omg", "imho", "imo"]);
+
 // ── Default profile returned on empty input ────────────────────────────────
 const EMPTY_PROFILE = {
   averageWordCount: 0,

@@ -1,5 +1,11 @@
 "use strict";
 
+// Force embeddings to fail fast (dead Ollama URL) BEFORE requiring the pipeline,
+// so retrieval is deterministically lexical here. These tests assert keyword
+// ordering, which is only stable in the lexical path; without this they'd flake
+// depending on whether a real Ollama/embed model happens to be running.
+process.env.OLLAMA_URL = "http://127.0.0.1:1";
+
 const test = require("node:test");
 const assert = require("node:assert/strict");
 
