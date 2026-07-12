@@ -22,6 +22,7 @@ function buildPrompt(newMessage, styleProfile, examples) {
     commonPhrases      = [],
     capitalizationStyle = "mixed",
     punctuationStyle   = "standard",
+    commonFillers      = [],
   } = styleProfile || {};
 
   // ── 1. Role framing ────────────────────────────────────────────────────
@@ -56,6 +57,10 @@ function buildPrompt(newMessage, styleProfile, examples) {
 
   if (commonPhrases.length > 0) {
     lines.push(`- Favourite words: ${commonPhrases.join(", ")}`);
+  }
+
+  if (commonFillers.length > 0) {
+    lines.push(`- Common Filler Words: Frequently uses words like "${commonFillers.join('", "')}". If these fit the context, use them.`);
   }
 
   lines.push(`- Capitalisation: ${capitalizationStyle}`);

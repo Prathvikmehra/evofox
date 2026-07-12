@@ -1,8 +1,8 @@
 "use strict";
 
-const retrieverModule = require("../retriever/findSimilarExamples");
+const retrieverModule = require("../retriever/semanticSearch");
 const promptModule    = require("../prompts/buildPrompt");
-const ollamaModule    = require("../response/callOllama");
+const ollamaModule    = require("../response/provider");
 
 /**
  * Orchestrates the generation of a reply.
@@ -28,7 +28,7 @@ const ollamaModule    = require("../response/callOllama");
  */
 async function generateReply({ incomingMessage, styleProfile, samplePairs, myName }) {
   // 1. Select the best few-shot examples via shared retriever module
-  const examples = retrieverModule.findSimilarExamples(incomingMessage, samplePairs || []);
+  const examples = await retrieverModule.findSimilarExamples(incomingMessage, samplePairs || []);
 
   // 2. Build the prompt
   const prompt = promptModule.buildPrompt(incomingMessage, styleProfile, examples);

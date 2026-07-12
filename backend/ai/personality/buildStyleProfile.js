@@ -50,6 +50,7 @@ const EMPTY_PROFILE = {
   commonPhrases: [],
   capitalizationStyle: "mixed",
   punctuationStyle: "standard",
+  commonFillers: [],
 };
 
 function buildStyleProfile(pairs) {
@@ -160,6 +161,23 @@ function buildStyleProfile(pairs) {
   const punctuationStyle =
     withTerminal / replies.length < 0.5 ? "minimal" : "standard";
 
+  // ── commonFillers ────────────────────────────────────────────────────────
+  const fillerFreq = {};
+  for (const reply of replies) {
+    const lowerReply = reply.toLowerCase();
+    for (const filler of FILLER_VOCAB) {
+      // Basic boundary check
+      const regex = new RegExp(`\\b${filler}\\b`);
+      if (regex.test(lowerReply)) {
+        fillerFreq[filler] = (fillerFreq[filler] || 0) + 1;
+      }
+    }
+  }
+  const commonFillers = Object.entries(fillerFreq)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([word]) => word);
+
   return {
     averageWordCount,
     emojiUsagePercent,
@@ -168,6 +186,7 @@ function buildStyleProfile(pairs) {
     commonPhrases,
     capitalizationStyle,
     punctuationStyle,
+    commonFillers,
   };
 }
 
