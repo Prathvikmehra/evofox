@@ -1,6 +1,6 @@
 "use strict";
 
-const retrieverModule = require("../retriever/semanticSearch");
+const retrieverModule = require("../retriever/mmrRetriever");
 const promptModule    = require("../prompts/buildPrompt");
 const ollamaModule    = require("../response/provider");
 
