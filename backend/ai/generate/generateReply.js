@@ -1,6 +1,7 @@
 "use strict";
 
-const retrieverModule = require("../retriever/mmrRetriever");
+const retrieverModule = require("../retriever/semanticRetriever");
+const { embedText, embedBatch } = require("../embeddings/embedText");
 const promptModule    = require("../prompts/buildPrompt");
 const ollamaModule    = require("../response/provider");
 
@@ -27,8 +28,20 @@ const ollamaModule    = require("../response/provider");
  * @returns {Promise<string>}
  */
 async function generateReply({ incomingMessage, styleProfile, samplePairs, myName }) {
+  // 0. Pre-fetch embeddings for the query and the historical pairs
+  const queryEmbedding = await embedText(incomingMessage);
+  
+  const incomingTexts = (samplePairs || []).map(p => p.incoming || "");
+  const docEmbs = await embedBatch(incomingTexts);
+  
+  // Attach embeddings to pairs (Claude's selectExamples expects pair.embedding)
+  const pairsWithEmbeddings = (samplePairs || []).map((p, i) => ({
+    ...p,
+    embedding: docEmbs[i]
+  }));
+
   // 1. Select the best few-shot examples via shared retriever module
-  const examples = await retrieverModule.findSimilarExamples(incomingMessage, samplePairs || []);
+  const examples = retrieverModule.selectExamples(incomingMessage, pairsWithEmbeddings, queryEmbedding);
 
   // 2. Build the prompt
   const prompt = promptModule.buildPrompt(incomingMessage, styleProfile, examples);

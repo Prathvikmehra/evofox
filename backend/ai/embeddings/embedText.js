@@ -14,7 +14,7 @@
  * Ollama endpoint: POST /api/embeddings  { model, prompt } -> { embedding }
  */
 
-const config = require("../../src/config");
+const config = require("../../backend/src/config");
 const fs = require("fs/promises");
 const path = require("path");
 

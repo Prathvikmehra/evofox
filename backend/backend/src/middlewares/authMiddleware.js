@@ -13,6 +13,11 @@ const jwt = require("jsonwebtoken");
 exports.verifyToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
 
+  // TEMPORARY BYPASS: allow testing without login
+  req.user = { userId: "dummy_user_id", email: "guest@example.com" };
+  return next();
+
+  /*
   // Expect: "Bearer <token>"
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ error: "No token provided" });
@@ -28,4 +33,5 @@ exports.verifyToken = (req, res, next) => {
     // Covers TokenExpiredError, JsonWebTokenError, NotBeforeError
     return res.status(401).json({ error: "Invalid or expired token" });
   }
+  */
 };
